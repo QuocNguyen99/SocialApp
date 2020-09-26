@@ -1,16 +1,20 @@
 import React from 'react'
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 
 import Button from '../components/Button'
 import TextInput from '../components/TextInput';
-import TextTouch from '../components/TextTouch';
+import TextTouch from '../components/TextTouch'
 
 export default function LoginScreen() {
 
-    const handelLogin = () => { }
+    const handelLogin = () => {
+        alert('login');
+    }
 
-    const handelToSignUp = () => { }
+    const handelToSignUp = () => {
+        alert('tapped');
+    }
 
     return (
         <ImageBackground
@@ -32,7 +36,10 @@ export default function LoginScreen() {
                         style={styles.button}
                         onPress={handelLogin} />
 
-                    <TextTouch style={styles.text2} onPress={handelToSignUp} title="Don't have an account? Sign up " />
+                    <TextTouch
+                        title="Don't have an account? Sign up "
+                        style={styles.text2}
+                        onPress={handelToSignUp} />
                 </View>
             </View>
         </ImageBackground>
@@ -64,7 +71,6 @@ const styles = StyleSheet.create({
     },
     text2: {
         color: 'blue',
-        marginTop: -15
     },
     imgBackground: {
         flex: 1,
