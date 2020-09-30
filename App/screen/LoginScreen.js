@@ -3,10 +3,10 @@ import { ImageBackground, StyleSheet, Text, View, Platform } from 'react-native'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import Button from '../components/Button'
-import ErrorMessage from '../components/Form/ErrorMessage';
-import TextInput from '../components/TextInput';
+import ButtonSubmit from '../components/Form/ButtonSubmit'
 import TextTouch from '../components/TextTouch'
+import TextInputField from '../components/Form/TextInputField';
+
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label('Email'),
@@ -20,6 +20,7 @@ export default function LoginScreen() {
             style={styles.imgBackground}
         >
             <View style={styles.container}>
+                <Text style={styles.textTitle}>LOGIN</Text>
 
                 <Formik
                     initialValues={{ email: '', password: '' }}
@@ -27,32 +28,27 @@ export default function LoginScreen() {
                     validationSchema={validationSchema}
 
                 >
-                    {({ handleChange, handleSubmit, errors, setFieldTouched, touched }) => (
+                    {() => (
                         <>
-                            <Text style={styles.textTitle}>LOGIN</Text>
-
-                            <Text style={styles.textSubTitle}>Username</Text>
-                            <TextInput
-                                onBlur={() => setFieldTouched('email')}
+                            <TextInputField
                                 style={styles.textInput}
-                                onChangeText={handleChange('email')} />
+                                styleTitle={styles.textSubTitle}
+                                name='email'
+                                title='Username'
+                            />
 
-                            <ErrorMessage error={errors.email} visible={touched.email} />
-
-                            <Text style={styles.textSubTitle}>Password</Text>
-                            <TextInput
-                                onBlur={() => setFieldTouched('password')}
+                            <TextInputField
                                 style={styles.textInput}
-                                secureTextEntry={true}
-                                onChangeText={handleChange('password')} />
-
-                            <ErrorMessage error={errors.password} visible={touched.password} />
+                                styleTitle={styles.textSubTitle}
+                                name='password'
+                                title='Password'
+                            />
 
                             <View style={styles.containerButton}>
-                                <Button
+                                <ButtonSubmit
                                     title='Login'
                                     style={styles.button}
-                                    onPress={handleSubmit} />
+                                />
 
                                 <TextTouch
                                     title="Don't have an account? Sign up "
