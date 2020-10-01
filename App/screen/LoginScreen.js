@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImageBackground, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Formik } from 'formik';
 
 import Button from '../components/Button'
