@@ -1,21 +1,23 @@
 import React from 'react'
+<<<<<<< HEAD
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+=======
+import { ImageBackground, StyleSheet, Text, View, Platform } from 'react-native';
+>>>>>>> 1c3e4c58da59aaabced0669204c733a39fb5f932
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
-import Button from '../components/Button'
-import TextInput from '../components/TextInput';
+import ButtonSubmit from '../components/Form/ButtonSubmit'
 import TextTouch from '../components/TextTouch'
+import TextInputField from '../components/Form/TextInputField';
+
+
+const validationSchema = Yup.object().shape({
+    email: Yup.string().required().email().label('Email'),
+    password: Yup.string().required().min(6).label('Password')
+})
 
 export default function LoginScreen() {
-
-    const handelLogin = () => {
-        alert('login');
-    }
-
-    const handelToSignUp = () => {
-        alert('tapped');
-    }
-
     return (
         <ImageBackground
             source={require('../../assets/bg.png')}
@@ -24,25 +26,45 @@ export default function LoginScreen() {
             <View style={styles.container}>
                 <Text style={styles.textTitle}>LOGIN</Text>
 
-                <Text style={styles.textSubTitle}>Username</Text>
-                <TextInput />
+                <Formik
+                    initialValues={{ email: '', password: '' }}
+                    onSubmit={(value) => alert(JSON.stringify(value))}
+                    validationSchema={validationSchema}
 
-                <Text style={styles.textSubTitle}>Password</Text>
-                <TextInput secureTextEntry={true} />
+                >
+                    {() => (
+                        <>
+                            <TextInputField
+                                style={styles.textInput}
+                                styleTitle={styles.textSubTitle}
+                                name='email'
+                                title='Username'
+                            />
 
-                <View style={styles.containerButton}>
-                    <Button
-                        title='Login'
-                        style={styles.button}
-                        onPress={handelLogin} />
+                            <TextInputField
+                                style={styles.textInput}
+                                styleTitle={styles.textSubTitle}
+                                name='password'
+                                title='Password'
+                            />
 
-                    <TextTouch
-                        title="Don't have an account? Sign up "
-                        style={styles.text2}
-                        onPress={handelToSignUp} />
-                </View>
+                            <View style={styles.containerButton}>
+                                <ButtonSubmit
+                                    title='Login'
+                                    style={styles.button}
+                                />
+
+                                <TextTouch
+                                    title="Don't have an account? Sign up "
+                                    style={styles.text2}
+                                    onPress={() => { console.log('Tapped') }} />
+                            </View>
+                        </>
+                    )
+                    }
+                </Formik>
             </View>
-        </ImageBackground>
+        </ImageBackground >
     )
 }
 
@@ -62,12 +84,16 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         color: '#2661FA',
-        marginBottom: 50
+        marginBottom: 50,
+
     },
     textSubTitle: {
         color: '#799DFC',
         fontSize: 15,
         marginVertical: 10
+    },
+    textInput: {
+        fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : 'ArialHebrew-Light'
     },
     text2: {
         color: 'blue',
