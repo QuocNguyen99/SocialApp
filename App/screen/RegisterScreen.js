@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, ImageBackground, Text, View } from 'react-native';
+import { StyleSheet, ImageBackground, Text, View, Image } from 'react-native';
 
 import FormField from '../components/Form/FormField';
 import * as Yup from 'yup';

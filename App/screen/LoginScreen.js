@@ -44,7 +44,6 @@ export default function LoginScreen() {
                     <View style={styles.containerButton}>
                         <ButtonSubmit
                             title='Login'
-                            style={styles.button}
                         />
 
                         <TextTouch
@@ -59,9 +58,7 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-    button: {
-        width: 200
-    },
+
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -86,6 +83,7 @@ const styles = StyleSheet.create({
     },
     text2: {
         color: 'blue',
+        alignSelf: 'flex-end'
     },
     imgBackground: {
         flex: 1,
