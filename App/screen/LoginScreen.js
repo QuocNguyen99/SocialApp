@@ -1,6 +1,6 @@
 import React from 'react'
 import { ImageBackground, StyleSheet, Text, View, Platform } from 'react-native';
-import { Formik } from 'formik';
+import FormField from '../components/Form/FormField'
 import * as Yup from 'yup';
 
 import ButtonSubmit from '../components/Form/ButtonSubmit'
@@ -22,43 +22,37 @@ export default function LoginScreen() {
             <View style={styles.container}>
                 <Text style={styles.textTitle}>LOGIN</Text>
 
-                <Formik
+                <FormField
                     initialValues={{ email: '', password: '' }}
                     onSubmit={(value) => alert(JSON.stringify(value))}
                     validationSchema={validationSchema}
-
                 >
-                    {() => (
-                        <>
-                            <TextInputField
-                                style={styles.textInput}
-                                styleTitle={styles.textSubTitle}
-                                name='email'
-                                title='Username'
-                            />
+                    <TextInputField
+                        style={styles.textInput}
+                        styleTitle={styles.textSubTitle}
+                        name='email'
+                        title='Email'
+                    />
 
-                            <TextInputField
-                                style={styles.textInput}
-                                styleTitle={styles.textSubTitle}
-                                name='password'
-                                title='Password'
-                            />
+                    <TextInputField
+                        style={styles.textInput}
+                        styleTitle={styles.textSubTitle}
+                        name='password'
+                        title='Password'
+                    />
 
-                            <View style={styles.containerButton}>
-                                <ButtonSubmit
-                                    title='Login'
-                                    style={styles.button}
-                                />
+                    <View style={styles.containerButton}>
+                        <ButtonSubmit
+                            title='Login'
+                            style={styles.button}
+                        />
 
-                                <TextTouch
-                                    title="Don't have an account? Sign up "
-                                    style={styles.text2}
-                                    onPress={() => { console.log('Tapped') }} />
-                            </View>
-                        </>
-                    )
-                    }
-                </Formik>
+                        <TextTouch
+                            title="Don't have an account? Sign up "
+                            style={styles.text2}
+                            onPress={() => { console.log('Tapped') }} />
+                    </View>
+                </FormField>
             </View>
         </ImageBackground >
     )
@@ -81,7 +75,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#2661FA',
         marginBottom: 50,
-
     },
     textSubTitle: {
         color: '#799DFC',
