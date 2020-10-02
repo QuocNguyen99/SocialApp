@@ -1,9 +1,5 @@
-import React from 'react'
-<<<<<<< HEAD
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-=======
+import React from 'react';
 import { ImageBackground, StyleSheet, Text, View, Platform } from 'react-native';
->>>>>>> 1c3e4c58da59aaabced0669204c733a39fb5f932
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
