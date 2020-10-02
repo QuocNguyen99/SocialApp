@@ -5,7 +5,7 @@ export default function AppButton({ title, style, onPress }) {
     return (
         <TouchableHighlight
             style={[styles.button, style]}
-            underlayColor='orange'
+            underlayColor='lightskyblue'
             onPress={onPress}
         >
 
@@ -17,15 +17,16 @@ export default function AppButton({ title, style, onPress }) {
 const styles = StyleSheet.create({
     button: {
         alignItems: "center",
-        backgroundColor: "darkorange",
-        padding: 10,
+        backgroundColor: "dodgerblue",
+        padding: 15,
+        width: 250,
         marginVertical: 30,
-        borderRadius: 25
+        borderRadius: 25,
+        elevation: 8
     },
     text: {
         color: 'white',
         fontWeight: 'bold',
         fontSize: 25,
-
     }
 })

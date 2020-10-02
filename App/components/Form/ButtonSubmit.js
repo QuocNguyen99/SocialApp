@@ -9,7 +9,7 @@ export default function ButtonSubmit({ title, style }) {
     return (
         <Button
             title={title}
-            style={styles.button}
+            style={style}
             onPress={handleSubmit} />
 
     )
