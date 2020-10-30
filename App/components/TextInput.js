@@ -1,6 +1,5 @@
 import React from 'react'
 import { StyleSheet, View, TextInput } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 export default function AppTextInput({ style, ...otherProps }) {
     return (
@@ -24,7 +23,8 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%',
-        paddingVertical: 15,
-        fontSize: 20
+        paddingVertical: 10,
+        fontSize: 20,
+        fontFamily: 'Roboto-Thin'
     },
 })

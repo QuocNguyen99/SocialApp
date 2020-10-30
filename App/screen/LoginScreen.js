@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, StyleSheet, Text, View, Platform } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, Platform, Image, Dimensions } from 'react-native';
 import FormField from '../components/Form/FormField'
 import * as Yup from 'yup';
 
@@ -13,14 +13,16 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required().min(6).label('Password')
 })
 
-export default function LoginScreen() {
+
+
+export default function LoginScreen({ navigation }) {
     return (
         <ImageBackground
             source={require('../../assets/bg.png')}
             style={styles.imgBackground}
         >
             <View style={styles.container}>
-                <Text style={styles.textTitle}>LOGIN</Text>
+                <Text style={styles.textTitle} >LOGIN</Text>
 
                 <FormField
                     initialValues={{ email: '', password: '' }}
@@ -28,14 +30,15 @@ export default function LoginScreen() {
                     validationSchema={validationSchema}
                 >
                     <TextInputField
-                        style={styles.textInput}
+                        autoCapitalize='none'
                         styleTitle={styles.textSubTitle}
                         name='email'
                         title='Email'
                     />
 
                     <TextInputField
-                        style={styles.textInput}
+                        autoCapitalize='none'
+                        secureTextEntry={true}
                         styleTitle={styles.textSubTitle}
                         name='password'
                         title='Password'
@@ -43,13 +46,14 @@ export default function LoginScreen() {
 
                     <View style={styles.containerButton}>
                         <ButtonSubmit
-                            title='Login'
+                            title='SUBMIT'
+                            style={styles.button}
                         />
 
                         <TextTouch
                             title="Don't have an account? Sign up "
                             style={styles.text2}
-                            onPress={() => { console.log('Tapped') }} />
+                            onPress={() => navigation.navigate('RegisterScreen')} />
                     </View>
                 </FormField>
             </View>
@@ -58,28 +62,26 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-
+    button: {
+        alignSelf: 'flex-end'
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
         marginHorizontal: 40
     },
     containerButton: {
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
     },
     textTitle: {
         fontSize: 30,
-        fontWeight: 'bold',
         color: '#2661FA',
-        marginBottom: 50,
+        marginBottom: 40,
+        fontFamily: 'Roboto-Bold'
     },
     textSubTitle: {
         color: '#799DFC',
-        fontSize: 15,
-        marginVertical: 10
-    },
-    textInput: {
-        fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : 'ArialHebrew-Light'
+        fontSize: 15
     },
     text2: {
         color: 'blue',

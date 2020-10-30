@@ -8,5 +8,10 @@
     "assetBundlePatterns": [
       "**/*"
     ]
+  },
+  "splash": {
+    "image": "./assets/logo.png",
+    "resizeMode": "cover",
+    "backgroundColor": "whitesmoke"
   }
 }

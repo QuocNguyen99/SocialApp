@@ -1,20 +1,43 @@
-import React from 'react'
-import { StyleSheet, Text, View, Image } from 'react-native';
+import React, { useEffect } from 'react'
+import { StyleSheet, View, Image, Dimensions } from 'react-native';
 
-import Button from '../components/Button'
+import Text from '../components/Text'
 
-export default function StartScreen() {
+const width = Dimensions.get('screen').width;
+
+export default function StartScreen({ navigation }) {
+
+    const navigationToLogin = () => {
+        navigation.navigate('LoginScreen')
+    }
+
+    useEffect(() => {
+        setTimeout(navigationToLogin, 1000);
+    }, [])
+
     return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
             <Image
-                source={require('../../assets/icon.png')}
-                style={{ alignSelf: 'flex-end', alignSelf: 'center', marginVertical: 50, width: 300, height: 300 }} />
-            <View style={{ flexDirection: 'column', marginTop: 100, marginHorizontal: 100 }}>
-                <Button />
-                <Button />
-            </View>
+                source={require('../../assets/logo.png')}
+                style={styles.img} />
+            <Text style={styles.title}>DOLPHIN</Text>
         </View>
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'whitesmoke',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    title: {
+        fontSize: 25,
+        fontFamily: 'Roboto-Bold',
+        color: 'royalblue',
+    },
+    img: {
+        width: width / 4
+    }
+})
