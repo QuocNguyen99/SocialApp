@@ -18,11 +18,9 @@ export default function RegisterScreen({ navigation }) {
 
     const create = async (value) => {
         try {
-            console.log('Value', value);
             const result = await userApi.createUser(value);
-            console.log('Reuslt', result);
-            if (!result) return alert('Fail');
-            alert('Success');
+            if (!result) return console.log('Fail');
+            console.log('Success');
         } catch (error) {
             console.log('Fail:', error);
         }

@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import ButtonSubmit from '../components/Form/ButtonSubmit'
 import TextTouch from '../components/TextTouch'
 import TextInputField from '../components/Form/TextInputField';
+import userApi from '../api/userApi';
 
 
 const validationSchema = Yup.object().shape({
@@ -16,6 +17,17 @@ const validationSchema = Yup.object().shape({
 
 
 export default function LoginScreen({ navigation }) {
+
+    const loginUser = async (value) => {
+        try {
+            const result = await userApi.login(value);
+            if (!result) return console.log('Fail Login');
+            console.log('Token', result);
+        } catch (error) {
+            console.log('Fail:', error);
+        }
+    }
+
     return (
         <ImageBackground
             source={require('../../assets/bg.png')}
@@ -26,7 +38,7 @@ export default function LoginScreen({ navigation }) {
 
                 <FormField
                     initialValues={{ email: '', password: '' }}
-                    onSubmit={(value) => alert(JSON.stringify(value))}
+                    onSubmit={(value) => loginUser(value)}
                     validationSchema={validationSchema}
                 >
                     <TextInputField
