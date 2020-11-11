@@ -4,9 +4,9 @@ import { AppLoading, SplashScreen } from 'expo';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native'
 
-import LoginScreen from './App/screen/LoginScreen';
-import RegisterScreen from './App/screen/RegisterScreen';
-import StartScreen from './App/screen/StartScreen'
+import LoginScreen from './App/screen/Auth/LoginScreen';
+import RegisterScreen from './App/screen/Auth/RegisterScreen';
+import StartScreen from './App/screen/Auth/StartScreen'
 
 const Stack = createStackNavigator()
 
