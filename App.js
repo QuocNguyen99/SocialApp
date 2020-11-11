@@ -28,7 +28,7 @@ export default function App() {
   if (!state) {
     <AppLoading onFinish={() => setState(true)} />
   }
-
+  console.log(process.env.product);
   return (
     <NavigationContainer>
       <StackNavigator />

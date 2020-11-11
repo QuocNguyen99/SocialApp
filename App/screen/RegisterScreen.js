@@ -6,14 +6,28 @@ import * as Yup from 'yup';
 import TextInputField from '../components/Form/TextInputField';
 import ButtonSubmit from '../components/Form/ButtonSubmit'
 import TextTouch from '../components/TextTouch'
+import userApi from '../api/userApi';
 
 const valaditionSchema = Yup.object().shape({
     email: Yup.string().required().email().label('Email'),
-    password: Yup.string().required().min(6).label('Password'),
+    password: Yup.string().required().min(5).label('Password'),
     displayname: Yup.string().required().min(1).label('Displayname')
 })
 
 export default function RegisterScreen({ navigation }) {
+
+    const create = async (value) => {
+        try {
+            console.log('Value', value);
+            const result = await userApi.createUser(value);
+            console.log('Reuslt', result);
+            if (!result) return alert('Fail');
+            alert('Success');
+        } catch (error) {
+            console.log('Fail:', error);
+        }
+    }
+
     return (
         <ImageBackground
             source={require('../../assets/bg.png')}
@@ -23,7 +37,7 @@ export default function RegisterScreen({ navigation }) {
                 <Text style={styles.textTitle}>REGISTER</Text>
                 <FormField
                     initialValues={{ email: '', password: '', displayname: '' }}
-                    onSubmit={(value) => alert(JSON.stringify(value))}
+                    onSubmit={(value) => create(value)}
                     validationSchema={valaditionSchema}
                 >
                     <TextInputField
