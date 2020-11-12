@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, View, TextInput } from 'react-native';
 
-export default function AppTextInput({ style, ...otherProps }) {
+export default function AppTextInput({ style, stylesContainer, ...otherProps }) {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, stylesContainer]}>
             <TextInput style={[styles.textInput, style]} {...otherProps} />
         </View>
     )
@@ -18,13 +18,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20
     },
-    icon: {
-        marginLeft: 20
-    },
     textInput: {
         width: '100%',
         paddingVertical: 10,
-        fontSize: 20,
-        fontFamily: 'Roboto-Thin'
+        fontSize: 20
     },
 })

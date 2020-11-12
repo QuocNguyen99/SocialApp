@@ -1,7 +1,8 @@
 import React from 'react';
-import { ImageBackground, StyleSheet, Text, View, Platform, Image, Dimensions } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, Alert } from 'react-native';
 import FormField from '../components/Form/FormField'
 import * as Yup from 'yup';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ButtonSubmit from '../components/Form/ButtonSubmit'
 import TextTouch from '../components/TextTouch'
@@ -14,20 +15,18 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required().min(6).label('Password')
 })
 
-
-
 export default function LoginScreen({ navigation }) {
 
     const loginUser = async (value) => {
         try {
             const result = await userApi.login(value);
-            if (!result) return console.log('Fail Login');
-            console.log('Token', result);
+            if (!result) return Alert.alert('Notification', 'Have problem');
+            await AsyncStorage.setItem('Token', result);
+            navigation.navigate('MainScreen');
         } catch (error) {
-            console.log('Fail:', error);
+            Alert.alert('Notification', error);
         }
     }
-
     return (
         <ImageBackground
             source={require('../../assets/bg.png')}
@@ -51,6 +50,7 @@ export default function LoginScreen({ navigation }) {
                     <TextInputField
                         autoCapitalize='none'
                         secureTextEntry={true}
+                        // style={styles.textInput}
                         styleTitle={styles.textSubTitle}
                         name='password'
                         title='Password'
@@ -84,6 +84,9 @@ const styles = StyleSheet.create({
     },
     containerButton: {
         alignSelf: 'flex-end',
+    },
+    textInput: {
+        fontFamily: 'Roboto-Thin'
     },
     textTitle: {
         fontSize: 30,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, ImageBackground, Text, View } from 'react-native';
+import { StyleSheet, ImageBackground, Text, View, Alert } from 'react-native';
 
 import FormField from '../components/Form/FormField';
 import * as Yup from 'yup';
@@ -18,9 +18,16 @@ export default function RegisterScreen({ navigation }) {
 
     const create = async (value) => {
         try {
-            const result = await userApi.createUser(value);
-            if (!result) return console.log('Fail');
-            console.log('Success');
+            if (value.confirm.trim() !== value.password.trim()) return Alert.alert('Notification', 'Error Confirm Password');
+            const newValue = {
+                email: value.email,
+                password: value.password,
+                displayname: value.displayname
+            };
+            console.log();
+            const result = await userApi.createUser(newValue);
+            if (!result) return Alert.alert('Notification', 'Fail');
+            Alert.alert('Notification', 'Success');
         } catch (error) {
             console.log('Fail:', error);
         }
@@ -34,7 +41,7 @@ export default function RegisterScreen({ navigation }) {
             <View style={styles.container}>
                 <Text style={styles.textTitle}>REGISTER</Text>
                 <FormField
-                    initialValues={{ email: '', password: '', displayname: '' }}
+                    initialValues={{ email: '', password: '', confirm: '', displayname: '' }}
                     onSubmit={(value) => create(value)}
                     validationSchema={valaditionSchema}
                 >
@@ -49,6 +56,14 @@ export default function RegisterScreen({ navigation }) {
                         autoCapitalize='none'
                         name='password'
                         title='Password'
+                        secureTextEntry={true}
+                        style={styles.textInput}
+                        styleTitle={styles.textSubTitle}
+                    />
+                    <TextInputField
+                        autoCapitalize='none'
+                        name='confirm'
+                        title='Confirm Password'
                         secureTextEntry={true}
                         style={styles.textInput}
                         styleTitle={styles.textSubTitle}
