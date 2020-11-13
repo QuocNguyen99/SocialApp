@@ -13,7 +13,7 @@ const Stack = createStackNavigator()
 
 const StackNavigator = () => (
   <Stack.Navigator
-    initialRouteName='StartScreen'
+    initialRouteName='MainScreen'
     screenOptions={{
       headerShown: false
     }}>
