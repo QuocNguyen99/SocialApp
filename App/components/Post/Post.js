@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import ItemPost from './ItemPost/ItemPost'
+import ItemPost from './ItemPost'
 
 
 export default function Post() {
