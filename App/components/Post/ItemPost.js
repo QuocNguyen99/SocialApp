@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
         color: 'gray'
     },
     content: {
-        fontFamily: 'Roboto-Medium',
-        color: 'black'
+        fontFamily: 'Roboto-Light',
+        color: 'black',
+        fontSize: 18
     }
 })
