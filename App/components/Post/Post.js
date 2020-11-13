@@ -1,20 +1,18 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import ItemPost from './ItemPost/ItemPost'
 
-import ItemInput from '../../components/Post/ItemInput'
-import Post from '../../components/Post/Post'
 
-export default function HomeScreen() {
+export default function Post() {
     return (
         <View style={styles.container}>
-            <ItemInput />
-            <Post />
+            <ItemPost />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 7
     }
 })
