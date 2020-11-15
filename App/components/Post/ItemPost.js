@@ -6,8 +6,6 @@ import moment from 'moment';
 import Avata from './Avata'
 import Button from './Button';
 import ImagePost from './ImagePost';
-import Icon from '../Icon';
-
 
 export default function ItemPost({ item }) {
     const [visiable, setVisiable] = useState(false)
@@ -59,7 +57,7 @@ export default function ItemPost({ item }) {
             </View>
 
             <Modal visible={visiable} transparent={true}>
-                <ImageViewer imageUrls={imageUrls} enableSwipeDown={true} enableImageZoom={true} onCancel={() => setVisiable(false)} />
+                <ImageViewer imageUrls={imageUrls} enableSwipeDown={true} onCancel={() => setVisiable(false)} />
             </Modal>
         </View>
     )
