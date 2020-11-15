@@ -9,8 +9,6 @@ import HomeScreen from '../Main/HomeScreen';
 const Tab = createMaterialTopTabNavigator();
 
 export default function MainStack() {
-
-
     const Chat = () => (
         <View style={{ flex: 1 }}>
             <Text>Chat</Text>

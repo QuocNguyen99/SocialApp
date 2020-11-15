@@ -1,14 +1,35 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native';
-import Input from './Input';
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, Modal } from 'react-native';
 
 import Avata from './Avata'
+import { TouchableHighlight } from 'react-native-gesture-handler';
+import CreatePost from '../../screen/CreatePost';
 
-export default function ItemInput() {
+
+export default function ItemInput({ onPress }) {
+    const [visiable, setVisiable] = useState(false)
+
+    const closeModal = () => {
+        setVisiable(false);
+    }
+
+    const openModal = () => {
+        setVisiable(true);
+    }
     return (
         <View style={styles.container}>
             <Avata image='' />
-            <Input placeholder='What are you thinking?' style={styles.input} />
+            <View style={styles.subContainer}>
+                <TouchableHighlight
+                    underlayColor='darkgray'
+                    onPress={openModal}
+                    style={styles.titleContainer}>
+                    <Text style={styles.title}>What are you thinking?</Text>
+                </TouchableHighlight>
+            </View>
+            <Modal visible={visiable} animationType='slide'>
+                <CreatePost closeModal={closeModal} />
+            </Modal>
         </View>
     )
 }
@@ -18,12 +39,24 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 15,
         paddingHorizontal: 20,
+        paddingVertical: 10,
         backgroundColor: 'white',
-        justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row'
     },
-    input: {
+    subContainer: {
+        flex: 1,
+        flexDirection: 'column'
+    },
+    titleContainer: {
+        borderWidth: 1,
+        borderColor: 'lightgray',
+        borderRadius: 30,
+        paddingVertical: 10,
+        marginLeft: 10
+    },
+    title: {
+        fontFamily: 'Roboto-Medium',
         marginLeft: 15
     }
 })

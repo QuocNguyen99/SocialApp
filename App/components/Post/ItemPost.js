@@ -1,37 +1,66 @@
-import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
-import Avata from './Avata'
+import React, { useEffect, useRef, useState } from 'react'
+import { StyleSheet, Text, View, TouchableHighlight, Modal } from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import moment from 'moment';
 
-export default function ItemPost({ url, name, time, content }) {
-    const [height, setHeight] = useState();
-    useEffect(() => {
-        Image.getSize(
-            'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/36762009_489593304810529_4217376718932934656_n.jpg?_nc_cat=104&ccb=2&_nc_sid=09cbfe&_nc_ohc=HlpGtuYL9ooAX9ML2xe&_nc_ht=scontent.fsgn5-5.fna&oh=60e7c6876f08ade9fbf2c68ddde15c04&oe=5FD386D1',
-            async (width, height) => {
-                await setHeight(height)
-            }
-        )
-    }, [])
+import Avata from './Avata'
+import Button from './Button';
+import ImagePost from './ImagePost';
+import Icon from '../Icon';
+
+
+export default function ItemPost({ item }) {
+    const [visiable, setVisiable] = useState(false)
+    let { author, createAt, content, image } = item;
+    const { displayName, imageAuthor } = author;
+    createAt = moment(createAt).startOf('hour').fromNow();
+    const openModal = () => {
+        setVisiable(true)
+    }
+
+    let imageUrls = [];
+    image.map(e => imageUrls.push({ url: e }))
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Avata />
+                <Avata image={imageAuthor} />
                 <View style={styles.subContainer}>
-                    <Text style={styles.name}>Huỳnh Quốc Nguyên</Text>
-                    <Text style={styles.time}>7 giờ trước</Text>
+                    <Text style={styles.name}>{displayName}</Text>
+                    <Text style={styles.time}>{createAt}</Text>
                 </View>
             </View>
-            <View style={styles.contentContainer}>
-                <Text style={styles.content}>Today I feel so good</Text>
+            {
+                !content ? null : (
+                    <View style={styles.contentContainer}>
+                        <Text style={styles.content}>{content}</Text>
+                    </View>
+                )
+            }
+            {
+                image.length == 0 ? null :
+                    <TouchableHighlight underlayColor='gray' onPress={openModal}>
+                        <ImagePost images={image} />
+                    </TouchableHighlight>
+            }
+            <View style={styles.likeCmtContainer}>
+                <Text>12</Text>
+                <Text>2</Text>
             </View>
-            <Image
-                resizeMode='stretch'
-                style={{
-                    height: height,
-                }}
-                source={{
-                    uri: 'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/36762009_489593304810529_4217376718932934656_n.jpg?_nc_cat=104&ccb=2&_nc_sid=09cbfe&_nc_ohc=HlpGtuYL9ooAX9ML2xe&_nc_ht=scontent.fsgn5-5.fna&oh=60e7c6876f08ade9fbf2c68ddde15c04&oe=5FD386D1',
-                }} />
+            <View style={styles.footContainer}>
+                <Button
+                    title='Like'
+                    iconName='thumbs-o-up'
+                    onPress={() => alert('Like')} />
+                <Button
+                    title='Comment'
+                    iconName='commenting-o'
+                    onPress={() => alert('Cooment')} />
+            </View>
+
+            <Modal visible={visiable} transparent={true}>
+                <ImageViewer imageUrls={imageUrls} enableSwipeDown={true} enableImageZoom={true} onCancel={() => setVisiable(false)} />
+            </Modal>
         </View>
     )
 }
@@ -39,14 +68,29 @@ export default function ItemPost({ url, name, time, content }) {
 const styles = StyleSheet.create({
     container: {
         marginTop: 15,
-        //backgroundColor: 'blue',
+        backgroundColor: 'white',
         paddingTop: 10
     },
     contentContainer: {
         margin: 10,
     },
+    imageContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    footContainer: {
+        borderTopColor: 'lightgray',
+        borderTopWidth: 1,
+        flexDirection: 'row',
+    },
+    likeCmtContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginVertical: 5
+    },
     subContainer: {
-        marginLeft: 10
+        marginLeft: 10,
+        marginBottom: 10
     },
     header: {
         paddingHorizontal: 20,
@@ -61,7 +105,7 @@ const styles = StyleSheet.create({
         color: 'gray'
     },
     content: {
-        fontFamily: 'Roboto-Light',
+        fontFamily: 'Roboto-Regular',
         color: 'black',
         fontSize: 18
     }

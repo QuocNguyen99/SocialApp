@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginHorizontal: 20,
+        marginHorizontal: 15,
+        marginBottom: -5
     },
     search: {
 
