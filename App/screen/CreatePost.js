@@ -1,8 +1,10 @@
 import React from 'react'
-import { StyleSheet, ScrollView, TextInput, View, TouchableHighlight, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, View, TouchableHighlight, Dimensions } from 'react-native';
 
 import Icon from '../components/Icon'
 import Title from '../components/Title';
+
+const { height } = Dimensions.get('screen');
 
 export default function CreatePost({ closeModal }) {
     return (
@@ -17,17 +19,10 @@ export default function CreatePost({ closeModal }) {
                 <Title title='Tạo bài viết' />
             </View>
             <View style={styles.containerContent}>
-                <ScrollView>
-                    <KeyboardAvoidingView behavior='padding'>
-                        <TextInput placeholder='What are you thinking?' multiline={true} style={styles.input} />
-                    </KeyboardAvoidingView>
-                </ScrollView>
+                <TextInput placeholder='What are you thinking?' multiline={true} style={styles.input} />
             </View>
             <View style={styles.footerContainer}>
-                <View style={styles.subFooter}>
-                    <View style={{ backgroundColor: 'blue', height: 50, width: 50 }}></View>
-                    <View style={{ backgroundColor: 'red', height: 50, width: 50 }}></View>
-                </View>
+                <View style={{ backgroundColor: 'red', height: 50, width: 50 }}></View>
             </View>
         </ View >
     )
@@ -38,7 +33,6 @@ const styles = StyleSheet.create({
         flex: 1
     },
     containerContent: {
-        flex: 1,
         paddingHorizontal: 10
     },
     headerContainer: {
@@ -51,20 +45,18 @@ const styles = StyleSheet.create({
     },
     footerContainer: {
         flex: 1,
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        backgroundColor: 'yellow'
     },
     icon: {
         borderRadius: 30,
         padding: 10
     },
     input: {
-        fontSize: 16
-    },
-    subFooter: {
-        flex: 0.5,
-        position: 'absolute',
-        backgroundColor: 'yellow',
-        height: 200, width: '100%',
-        flexDirection: 'row'
+        fontSize: 16,
+        height: height / 1.4,
+        textAlignVertical: 'top',
+        paddingTop: 15,
+        paddingRight: 10
     }
 })
