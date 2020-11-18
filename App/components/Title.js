@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default function Title({ title }) {
+export default function Title({ title, style }) {
     return (
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, style]}>{title}</Text>
     )
 }
 

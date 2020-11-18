@@ -16,13 +16,27 @@ export default function CreatePost({ closeModal }) {
                     onPress={closeModal}>
                     <Icon name='arrow-left' color='black' size={20} />
                 </TouchableHighlight>
-                <Title title='Tạo bài viết' />
+                <Title title='Create Post' />
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <TouchableHighlight
+                        style={styles.icon}
+                        underlayColor='lightgray'
+                        onPress={() => alert('Post')}
+                    >
+                        <Title title='Post' />
+                    </TouchableHighlight>
+                </View>
             </View>
             <View style={styles.containerContent}>
                 <TextInput placeholder='What are you thinking?' multiline={true} style={styles.input} />
             </View>
             <View style={styles.footerContainer}>
-                <View style={{ backgroundColor: 'red', height: 50, width: 50 }}></View>
+                <TouchableHighlight
+                    underlayColor='silver'
+                    onPress={() => alert('123')}
+                    style={styles.inputImage}>
+                    <Icon name='camera' size={30} />
+                </TouchableHighlight>
             </View>
         </ View >
     )
@@ -44,13 +58,12 @@ const styles = StyleSheet.create({
         borderWidth: 1
     },
     footerContainer: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        backgroundColor: 'yellow'
+        flex: 1
     },
     icon: {
-        borderRadius: 30,
-        padding: 10
+        borderRadius: 50,
+        padding: 10,
+        marginHorizontal: 5
     },
     input: {
         fontSize: 16,
@@ -58,5 +71,16 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
         paddingTop: 15,
         paddingRight: 10
+    },
+    inputImage: {
+        backgroundColor: 'lightgray',
+        height: 80,
+        width: 80,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    btnSubmit: {
+        justifyContent: 'flex-end'
     }
 })
