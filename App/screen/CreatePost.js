@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, TextInput, View, TouchableHighlight, ScrollView } from 'react-native';
+import { StyleSheet, TextInput, View, TouchableHighlight, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import postApi from '../api/postApi';
@@ -22,15 +22,14 @@ export default function CreatePost({ closeModal }) {
     }
 
     const handlePost = async (content) => {
-        if (content?.trim() === "") return alert(`Don't have any thing`)
+        if (content?.trim() === undefined) return alert(`Don't have any thing`)
         const postTemp = {
             content: content,
-            author: '5fad248328154b00177588966'
+            author: '5fad248328154b0017758896'
         }
         const token = await AsyncStorage.getItem('Token');
-        console.log(token);
         const result = await postApi.createPost(postTemp, token);
-        return result !== 'Success' ? alert(`Post not success`) : alert(`Post not success`);
+        return result !== 'Success' ? Alert.alert('Notification', `Post don't success`) : Alert.alert('Notification', 'Success');
     }
 
     return (
