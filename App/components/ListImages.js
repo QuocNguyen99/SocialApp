@@ -2,7 +2,6 @@ import React from 'react'
 import { StyleSheet, Image, TouchableWithoutFeedback, Alert } from 'react-native'
 
 export default function ListImages({ images, style, removeImage }) {
-    console.log('Render');
     return (
         <>
             {

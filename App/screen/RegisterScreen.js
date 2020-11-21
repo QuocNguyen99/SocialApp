@@ -17,16 +17,14 @@ const valaditionSchema = Yup.object().shape({
 export default function RegisterScreen({ navigation }) {
 
     const create = async (value) => {
-        if (value.confirm.trim() !== value.password.trim()) return Alert.alert('Notification', 'Error Confirm Password');
+        if (value.confirm.trim() !== value.password.trim()) return Alert.alert('Register', 'Error Confirm Password');
         const newValue = {
             email: value.email,
             password: value.password,
             displayname: value.displayname
         };
-        console.log();
         const { error, type } = await userApi.createUser(newValue);
-        console.log('error', error);
-        if (error) return Alert.alert('Notification', type ? type : 'Fail');
+        if (error) return Alert.alert('Register', type ? type : 'Fail');
         navigation.navigate('LoginScreen');
     }
 
