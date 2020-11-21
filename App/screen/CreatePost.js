@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
-import { StyleSheet, TextInput, View, TouchableHighlight, ScrollView, Alert } from 'react-native';
+import { StyleSheet, TextInput, View, TouchableHighlight, TouchableWithoutFeedback, ScrollView, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connect } from 'react-redux';
+import ImagePicker from 'react-native-image-picker';
 
 import postApi from '../api/postApi';
 import Icon from '../components/Icon'
 import Title from '../components/Title';
+import ListImages from '../components/ListImages';
 
-export default function CreatePost({ closeModal }) {
+function CreatePost({ closeModal, infoUser }) {
     const [height, setHeight] = useState(50);
-    const [content, setContent] = useState();
+    const [content, setContent] = useState('');
+    const [images, setImages] = useState([])
     const styleInput = {
         fontSize: 16,
         height: height,
@@ -17,19 +21,58 @@ export default function CreatePost({ closeModal }) {
         paddingRight: 10
     }
 
+    const options = {
+        title: 'Choose Image',
+        storageOptions: {
+            skipBackup: true,
+            path: 'images',
+        },
+        saveToPhotos: true,
+        quality: 0.5
+    };
+
+    const openLibary = () => {
+        return ImagePicker.launchImageLibrary(options, (response) => {
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                const source = `data:image/png;base64,${response.data}`
+                setImages([...images, source])
+            }
+        });
+    }
     const updateSize = (e) => {
         setHeight(e)
     }
 
-    const handlePost = async (content) => {
-        if (content?.trim() === undefined) return alert(`Don't have any thing`)
+    const handlePost = async (content, images) => {
+        if (content?.trim() === undefined && (images?.length === 0 || images === undefined)) return Alert.alert('Notification', `Please enter something`)
         const postTemp = {
             content: content,
-            author: '5fad248328154b0017758896'
+            image: images,
+            author: infoUser.id
         }
         const token = await AsyncStorage.getItem('Token');
         const result = await postApi.createPost(postTemp, token);
-        return result !== 'Success' ? Alert.alert('Notification', `Post don't success`) : Alert.alert('Notification', 'Success');
+        return result !== 'Success' ? Alert.alert('Notification', `Post don't success`) :
+            Alert.alert('Notification', 'Success', [{ text: 'Ok', onPress: () => closeModal() }]);
+    }
+
+    const removeImage = (i) => {
+        Alert.alert('Delete', 'Do you want remove?', [
+            {
+                text: 'Yes', onPress: () => {
+                    const newImages = images.filter((e, index) => index !== i);
+                    setImages(newImages)
+                }
+            },
+            { text: 'No' }
+        ])
     }
 
     return (
@@ -46,9 +89,9 @@ export default function CreatePost({ closeModal }) {
                     <TouchableHighlight
                         style={styles.icon}
                         underlayColor='lightgray'
-                        onPress={() => handlePost(content)}
+                        onPress={() => handlePost(content, images)}
                     >
-                        <Title title='Post' />
+                        <Title title='Post' style={styles.textSubmit} />
                     </TouchableHighlight>
                 </View>
             </View>
@@ -62,17 +105,27 @@ export default function CreatePost({ closeModal }) {
                         style={styleInput} />
                 </View>
                 <View style={styles.footerContainer}>
-                    <TouchableHighlight
-                        underlayColor='silver'
-                        onPress={() => alert('123')}
-                        style={styles.inputImage}>
-                        <Icon name='camera' size={30} />
-                    </TouchableHighlight>
+                    <ScrollView horizontal={true}>
+                        <ListImages images={images} removeImage={removeImage} />
+                        <TouchableHighlight
+                            underlayColor='silver'
+                            onPress={() => openLibary()}
+                            style={styles.inputImage}>
+                            <Icon name='camera' size={30} />
+                        </TouchableHighlight>
+                    </ScrollView>
                 </View>
             </ScrollView>
         </ View >
     )
 }
+
+function mapStateToProps(state) {
+    return {
+        infoUser: state.user.infoUser
+    }
+}
+export default connect(mapStateToProps)(CreatePost)
 
 const styles = StyleSheet.create({
     container: {
@@ -92,7 +145,8 @@ const styles = StyleSheet.create({
     footerContainer: {
         flex: 1,
         marginTop: 15,
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        flexDirection: 'row'
     },
     icon: {
         borderRadius: 50,
@@ -107,8 +161,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    image: {
+        height: 80,
+        width: 80,
+        borderRadius: 10,
+        marginRight: 5
+    },
     btnSubmit: {
         flex: 1,
         alignItems: 'flex-end'
+    },
+    textSubmit: {
+        fontFamily: 'Roboto-Light',
+        color: 'blue'
     }
 })

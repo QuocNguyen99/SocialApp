@@ -26,6 +26,7 @@
     "react-native": "^0.63.3",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-gesture-handler": "^1.8.0",
+    "react-native-image-picker": "^2.3.4",
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^3.1.8",
@@ -34,6 +35,8 @@
     "react-native-unimodules": "~0.11.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
     "yup": "^0.29.3"
   },
   "devDependencies": {

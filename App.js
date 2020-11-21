@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { AppLoading, SplashScreen } from 'expo';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import rootReducer from './App/redux/Reducer/rootReducer';
+
 
 import LoginScreen from './App/screen/LoginScreen';
 import RegisterScreen from './App/screen/RegisterScreen';
@@ -13,7 +17,7 @@ const Stack = createStackNavigator()
 
 const StackNavigator = () => (
   <Stack.Navigator
-    initialRouteName='LoginScreen'
+    initialRouteName='StartScreen'
     screenOptions={{
       headerShown: false
     }}>
@@ -24,15 +28,19 @@ const StackNavigator = () => (
   </Stack.Navigator>
 )
 
+const store = createStore(rootReducer)
+
 export default function App() {
   const [state, setState] = useState(false);
   if (!state) {
     <AppLoading onFinish={() => setState(true)} />
   }
   return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
+    </Provider>
   );
 }
 

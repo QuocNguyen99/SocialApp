@@ -3,30 +3,33 @@ import { ImageBackground, StyleSheet, Text, View, Alert } from 'react-native';
 import FormField from '../components/Form/FormField'
 import * as Yup from 'yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connect } from 'react-redux'
 
 import ButtonSubmit from '../components/Form/ButtonSubmit'
 import TextTouch from '../components/TextTouch'
 import TextInputField from '../components/Form/TextInputField';
 import userApi from '../api/userApi';
-
+import { saveUser } from '../redux/action'
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label('Email'),
     password: Yup.string().required().min(6).label('Password')
 })
 
-export default function LoginScreen({ navigation }) {
-
+function LoginScreen({ navigation, handleSaveInfo }) {
     const loginUser = async (value) => {
         try {
-            const result = await userApi.login(value);
-            if (!result) return Alert.alert('Notification', 'Have problem');
-            await AsyncStorage.setItem('Token', result);
+            const { error, data } = await userApi.login(value);
+            if (error) return Alert.alert('Notification', 'Have problem');
+            console.log('Data', data);
+            await AsyncStorage.setItem('Token', data.token);
+            handleSaveInfo(data.user);
             navigation.navigate('MainScreen');
         } catch (error) {
-            Alert.alert('Notification', error);
+            Alert.alert('Error', error.message);
         }
     }
+
     return (
         <ImageBackground
             source={require('../../assets/bg.png')}
@@ -73,6 +76,13 @@ export default function LoginScreen({ navigation }) {
     )
 }
 
+function mapDispatchToProps(dispatch) {
+    return {
+        handleSaveInfo: (info) => dispatch(saveUser(info))
+    }
+}
+export default connect(null, mapDispatchToProps)(LoginScreen)
+
 const styles = StyleSheet.create({
     button: {
         alignSelf: 'flex-end'
@@ -108,3 +118,6 @@ const styles = StyleSheet.create({
         height: '100%',
     }
 })
+
+
+

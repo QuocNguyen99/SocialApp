@@ -1,6 +1,7 @@
 import React, { } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { connect } from 'react-redux'
 
 import Icon from '../../components/Icon';
 import Header from '../../components/Header';
@@ -8,7 +9,7 @@ import HomeScreen from '../Main/HomeScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function MainStack() {
+function MainStack({ infoUser }) {
     const Chat = () => (
         <View style={{ flex: 1 }}>
             <Text>Chat</Text>
@@ -78,6 +79,13 @@ export default function MainStack() {
         </View>
     )
 }
+
+function mapStateToProps(state) {
+    return {
+        infoUser: state.user.infoUser
+    }
+}
+export default connect(mapStateToProps)(MainStack)
 
 const styles = StyleSheet.create({
     container: {
