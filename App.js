@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { AppLoading, SplashScreen } from 'expo';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -17,7 +17,7 @@ const Stack = createStackNavigator()
 
 const StackNavigator = () => (
   <Stack.Navigator
-    initialRouteName='StartScreen'
+    initialRouteName='LoginScreen'
     screenOptions={{
       headerShown: false
     }}>
@@ -32,9 +32,13 @@ const store = createStore(rootReducer)
 
 export default function App() {
   const [state, setState] = useState(false);
-  if (!state) {
-    <AppLoading onFinish={() => setState(true)} />
-  }
+  // if (!state) {
+  //   <AppLoading onFinish={() => setState(true)} />
+  // }
+
+  useEffect(() => {
+    console.log('123');
+  })
   return (
     <Provider store={store}>
       <NavigationContainer>
