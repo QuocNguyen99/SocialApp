@@ -1,7 +1,8 @@
-import React, { useRef } from 'react'
-import { FlatList, Modal, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react'
+import { FlatList, Modal, StyleSheet } from 'react-native';
 
-import ItemPost from './ItemPost'
+import ItemPost from './ItemPost';
+import postApi from '../../api/postApi'
 
 const array = [
     {
@@ -105,12 +106,28 @@ const array = [
 ]
 
 export default function Post() {
+    const [posts, setPosts] = useState([]);
+    const [page, setPage] = useState(1);
 
+    useEffect(() => {
+        getPosts();
+    }, [page])
+
+    const getPosts = async () => {
+        try {
+            const { data } = await postApi.getListPost(page);
+            setPosts([...posts, ...data])
+        } catch (error) {
+            console.log('Posts', error.message);
+        }
+
+    }
+    console.log('Post', posts.length);
     return (
         <FlatList
             scrollEnabled={false}
             style={styles.container}
-            data={array}
+            data={posts}
             keyExtractor={(item) => item._id.toString()}
             renderItem={({ item }) => (
                 <ItemPost item={item} />

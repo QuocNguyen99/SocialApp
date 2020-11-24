@@ -25,6 +25,21 @@ const postApi = {
             console.log('err', error.message);
         }
 
+    },
+    getListPost: (page) => {
+        try {
+            const url = ENDPOINT.GET_LIST_POST;
+            return axiosClient.get(
+                url,
+                {
+                    params: {
+                        page: page
+                    }
+                }
+            )
+        } catch (error) {
+            console.log('err', error.message);
+        }
     }
 }
 
