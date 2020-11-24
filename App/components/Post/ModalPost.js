@@ -4,10 +4,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 
-import postApi from '../api/postApi';
-import Icon from '../components/Icon'
-import Title from '../components/Title';
-import ListImages from '../components/ListImages';
+import postApi from '../../api/postApi';
+import Icon from '../Icon'
+import Title from '../../components/Title';
+import ListImages from '../../components/ListImages';
 
 function CreatePost({ closeModal, infoUser }) {
     const [height, setHeight] = useState(50);
@@ -51,16 +51,21 @@ function CreatePost({ closeModal, infoUser }) {
     }
 
     const handlePost = async (content, images) => {
-        if (content?.trim() === undefined && (images?.length === 0 || images === undefined)) return Alert.alert('Notification', `Please enter something`)
-        const postTemp = {
-            content: content,
-            image: images,
-            author: infoUser.id
+        try {
+            if (content?.trim() === undefined && (images?.length === 0 || images === undefined)) return Alert.alert('Notification', `Please enter something`)
+            const postTemp = {
+                content: content,
+                image: images,
+                author: infoUser.id
+            }
+            const token = await AsyncStorage.getItem('Token');
+            const { error, data } = await postApi.createPost(postTemp, token);
+            return error ? Alert.alert('Notification', `Post don't success`) :
+                Alert.alert('Notification', 'Success', [{ text: 'Ok', onPress: () => closeModal() }]);
+        } catch (error) {
+            console.log('Error', error.message);
         }
-        const token = await AsyncStorage.getItem('Token');
-        const result = await postApi.createPost(postTemp, token);
-        return result !== 'Success' ? Alert.alert('Notification', `Post don't success`) :
-            Alert.alert('Notification', 'Success', [{ text: 'Ok', onPress: () => closeModal() }]);
+
     }
 
     const removeImage = (i) => {

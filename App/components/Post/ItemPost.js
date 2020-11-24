@@ -2,14 +2,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, Modal } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import moment from 'moment';
+import { connect } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Avata from './Avata'
 import Button from './Button';
 import ImagePost from './ImagePost';
+import postApi from '../../api/postApi'
 
-export default function ItemPost({ item }) {
+function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
-    let { author, createAt, content, image } = item;
+    let { _id, author, createAt, content, image } = item;
     const { displayName, imageAuthor } = author;
     createAt = moment(createAt).startOf('hour').fromNow();
     const openModal = () => {
@@ -18,6 +21,19 @@ export default function ItemPost({ item }) {
 
     let imageUrls = [];
     image.map(e => imageUrls.push({ url: e }))
+
+    const likePost = async (id, idUser) => {
+        try {
+            const token = await AsyncStorage.getItem('Token');
+            console.log('Token', token);
+            console.log('2', _id);
+            const { error } = await postApi.likePost(id, idUser, token);
+            console.log('3', error);
+            if (!error) console.log('Success');
+        } catch (error) {
+            console.log('Like Post', error.message);
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -49,7 +65,7 @@ export default function ItemPost({ item }) {
                 <Button
                     title='Like'
                     iconName='thumbs-o-up'
-                    onPress={() => alert('Like')} />
+                    onPress={() => likePost(_id, idUser)} />
                 <Button
                     title='Comment'
                     iconName='commenting-o'
@@ -62,6 +78,14 @@ export default function ItemPost({ item }) {
         </View>
     )
 }
+
+function mapStateToProps(state) {
+    return {
+        idUser: state.user.infoUser.id
+    }
+}
+
+export default connect(mapStateToProps)(ItemPost)
 
 const styles = StyleSheet.create({
     container: {

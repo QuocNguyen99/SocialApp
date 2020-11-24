@@ -21,7 +21,6 @@ const StackNavigator = () => (
     screenOptions={{
       headerShown: false
     }}>
-    <Stack.Screen name='StartScreen' component={StartScreen} />
     <Stack.Screen name='LoginScreen' component={LoginScreen} />
     <Stack.Screen name='RegisterScreen' component={RegisterScreen} />
     <Stack.Screen name='MainScreen' component={MainStack} />
@@ -37,7 +36,6 @@ export default function App() {
   // }
 
   useEffect(() => {
-    console.log('123');
   })
   return (
     <Provider store={store}>

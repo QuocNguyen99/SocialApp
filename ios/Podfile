@@ -21,6 +21,8 @@ target 'SocialApp' do
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   post_install do |installer|
     flipper_post_install(installer)
   end

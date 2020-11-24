@@ -21,8 +21,6 @@ function LoginScreen({ navigation, handleSaveInfo }) {
         try {
             const { error, data } = await userApi.login(value);
             if (error) return Alert.alert('Notification', 'Have problem');
-            console.log('Data', data);
-            await AsyncStorage.setItem('Token', data.token);
             handleSaveInfo(data.user);
             navigation.navigate('MainScreen');
         } catch (error) {

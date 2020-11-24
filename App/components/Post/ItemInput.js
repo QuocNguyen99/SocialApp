@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Modal } from 'react-native';
 
 import Avata from './Avata'
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import CreatePost from '../../screen/CreatePost';
+import ModalPost from './ModalPost';
 
 
 export default function ItemInput({ onPress }) {
@@ -28,7 +28,7 @@ export default function ItemInput({ onPress }) {
                 </TouchableHighlight>
             </View>
             <Modal visible={visiable} animationType='slide'>
-                <CreatePost closeModal={closeModal} />
+                <ModalPost closeModal={closeModal} />
             </Modal>
         </View>
     )

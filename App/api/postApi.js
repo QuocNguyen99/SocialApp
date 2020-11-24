@@ -13,7 +13,7 @@ const postApi = {
                     image: post.image,
                     author: post.author,
                     comment: post.comment,
-                    likeUser: post.likeUser
+                    likePost: post.likePost
                 },
                 {
                     headers: {
@@ -39,6 +39,29 @@ const postApi = {
             )
         } catch (error) {
             console.log('err', error.message);
+        }
+    },
+    likePost: (id, idUser, token) => {
+        try {
+            const url = ENDPOINT.LIKE_POST;
+            return axiosClient.put(
+                url,
+                {
+                    idUser: idUser,
+
+                },
+                {
+                    headers: {
+                        'token': token
+                    },
+                    params: {
+                        'id': id
+                    }
+                },
+
+            )
+        } catch (error) {
+            console.log('Error', error.message);
         }
     }
 }
