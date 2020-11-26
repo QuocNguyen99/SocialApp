@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, Modal } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import moment from 'moment';
@@ -9,12 +9,19 @@ import Avata from './Avata'
 import Button from './Button';
 import ImagePost from './ImagePost';
 import postApi from '../../api/postApi'
+import { set } from 'react-native-reanimated';
 
 function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
-    let { _id, author, createAt, content, image } = item;
+    const [color, setColor] = useState();
+    let { _id, author, createAt, content, image, likePost: likes } = item;
     const { displayName, imageAuthor } = author;
     createAt = moment(createAt).startOf('hour').fromNow();
+    console.log(likes.length);
+    useEffect(() => {
+        changeColor(likes, idUser)
+    }, [likes.length])
+
     const openModal = () => {
         setVisiable(true)
     }
@@ -25,14 +32,16 @@ function ItemPost({ item, idUser }) {
     const likePost = async (id, idUser) => {
         try {
             const token = await AsyncStorage.getItem('Token');
-            console.log('Token', token);
-            console.log('2', _id);
-            const { error } = await postApi.likePost(id, idUser, token);
-            console.log('3', error);
-            if (!error) console.log('Success');
+            await postApi.likePost(id, idUser, token);
+            color == "dodgerblue" ? setColor('gray') : setColor('dodgerblue')
         } catch (error) {
             console.log('Like Post', error.message);
         }
+    }
+
+    const changeColor = (likes, idUser) => {
+        const result = likes.filter(e => e == idUser);
+        return result.length > 0 ? setColor('dodgerblue') : setColor('gray')
     }
 
     return (
@@ -58,14 +67,16 @@ function ItemPost({ item, idUser }) {
                     </TouchableHighlight>
             }
             <View style={styles.likeCmtContainer}>
-                <Text>12</Text>
+                <Text>{likes.length}</Text>
                 <Text>2</Text>
             </View>
             <View style={styles.footContainer}>
                 <Button
                     title='Like'
                     iconName='thumbs-o-up'
-                    onPress={() => likePost(_id, idUser)} />
+                    styleTitle={{ color: color }}
+                    onPress={() => likePost(_id, idUser)}
+                    color={color} />
                 <Button
                     title='Comment'
                     iconName='commenting-o'

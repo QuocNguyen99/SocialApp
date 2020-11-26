@@ -15,11 +15,11 @@ export default function Post() {
     const getPosts = async () => {
         try {
             const { data } = await postApi.getListPost(page);
-            setPosts([...data])
+            setPosts([...data]);
+
         } catch (error) {
             console.log('Posts', error.message);
         }
-
     }
     return (
         <FlatList
