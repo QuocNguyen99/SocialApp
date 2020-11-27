@@ -4,23 +4,58 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import io from 'socket.io-client/dist/socket.io'
 
 import Avata from './Avata'
 import Button from './Button';
 import ImagePost from './ImagePost';
 import postApi from '../../api/postApi'
-import { set } from 'react-native-reanimated';
+
 
 function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
     const [color, setColor] = useState();
+    const [countLike, setCountLike] = useState();
     let { _id, author, createAt, content, image, likePost: likes } = item;
     const { displayName, imageAuthor } = author;
+
+    const connectionConfig = {
+        jsonp: false,
+        reconnection: true,
+        reconnectionDelay: 100,
+        reconnectionAttempts: 100000,
+        transports: ['websocket'], // you need to explicitly tell it to use websockets
+    };
+
+    const socket = io('http://192.168.1.6:3000/', connectionConfig);
+    socket.on('connect', () => {
+        console.log('connected to server');
+    });
+
     createAt = moment(createAt).startOf('hour').fromNow();
-    console.log(likes.length);
+
     useEffect(() => {
         changeColor(likes, idUser)
     }, [likes.length])
+
+    useEffect(() => {
+        getCountLike(likes)
+    }, [])
+
+    const getCountLike = (likes) => {
+        setCountLike(likes.length)
+    }
+
+    const getCountLikeFormSocket = () => {
+        socket.on('SERVER-SEND-COUNT-LIKE', (data) => {
+            setCountLike(data)
+        })
+    }
+
+    const sendCountLikeToSocket = (id) => {
+        socket.emit('CLIENT-SEND-COUNT-LIKE', id);
+
+    }
 
     const openModal = () => {
         setVisiable(true)
@@ -33,6 +68,8 @@ function ItemPost({ item, idUser }) {
         try {
             const token = await AsyncStorage.getItem('Token');
             await postApi.likePost(id, idUser, token);
+            sendCountLikeToSocket(id);
+            getCountLikeFormSocket(countLike);
             color == "dodgerblue" ? setColor('gray') : setColor('dodgerblue')
         } catch (error) {
             console.log('Like Post', error.message);
@@ -67,7 +104,7 @@ function ItemPost({ item, idUser }) {
                     </TouchableHighlight>
             }
             <View style={styles.likeCmtContainer}>
-                <Text>{likes.length}</Text>
+                <Text>{countLike}</Text>
                 <Text>2</Text>
             </View>
             <View style={styles.footContainer}>
