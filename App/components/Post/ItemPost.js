@@ -4,33 +4,21 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import io from 'socket.io-client/dist/socket.io'
 
 import Avata from './Avata'
 import Button from './Button';
 import ImagePost from './ImagePost';
-import postApi from '../../api/postApi'
+import postApi from '../../api/postApi';
+import socket from '../../socket/socket';
+import SOCKET_URL from '../../socket/constant'
 
 
 function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
     const [color, setColor] = useState();
-    const [countLike, setCountLike] = useState();
     let { _id, author, createAt, content, image, likePost: likes } = item;
+    const [countLike, setCountLike] = useState(likes.length);
     const { displayName, imageAuthor } = author;
-
-    const connectionConfig = {
-        jsonp: false,
-        reconnection: true,
-        reconnectionDelay: 100,
-        reconnectionAttempts: 100000,
-        transports: ['websocket'], // you need to explicitly tell it to use websockets
-    };
-
-    const socket = io('http://192.168.1.6:3000/', connectionConfig);
-    socket.on('connect', () => {
-        console.log('connected to server');
-    });
 
     createAt = moment(createAt).startOf('hour').fromNow();
 
@@ -39,22 +27,21 @@ function ItemPost({ item, idUser }) {
     }, [likes.length])
 
     useEffect(() => {
-        getCountLike(likes)
+        getCountLikeFormSocket(setCountLike);
     }, [])
 
-    const getCountLike = (likes) => {
-        setCountLike(likes.length)
-    }
+    // const getCountLike = (likes) => {
+    //     setCountLike(likes.length)
+    // }
 
-    const getCountLikeFormSocket = () => {
-        socket.on('SERVER-SEND-COUNT-LIKE', (data) => {
-            setCountLike(data)
+    const getCountLikeFormSocket = (setCountLike) => {
+        socket.on(SOCKET_URL.SERVER_SEND_COUNT_LIKE, (data) => {
+            setCountLike(data);
         })
     }
 
     const sendCountLikeToSocket = (id) => {
-        socket.emit('CLIENT-SEND-COUNT-LIKE', id);
-
+        socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
     }
 
     const openModal = () => {
@@ -69,7 +56,7 @@ function ItemPost({ item, idUser }) {
             const token = await AsyncStorage.getItem('Token');
             await postApi.likePost(id, idUser, token);
             sendCountLikeToSocket(id);
-            getCountLikeFormSocket(countLike);
+            // getCountLikeFormSocket(setCountLike);
             color == "dodgerblue" ? setColor('gray') : setColor('dodgerblue')
         } catch (error) {
             console.log('Like Post', error.message);
