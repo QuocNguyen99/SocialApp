@@ -5,7 +5,6 @@ const postApi = {
     createPost: (post, token) => {
         try {
             const url = ENDPOINT.CREATE_POST;
-            console.log('123');
             return axiosClient.post(
                 url,
                 {
