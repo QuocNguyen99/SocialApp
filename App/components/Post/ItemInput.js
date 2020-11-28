@@ -28,7 +28,7 @@ export default function ItemInput({ onPress }) {
                 </TouchableHighlight>
             </View>
             <Modal visible={visiable} animationType='slide'>
-                <ModalPost closeModal={closeModal} />
+                <ModalPost closeModal={closeModal} title='Create Post' buttonTitle='Post' />
             </Modal>
         </View>
     )

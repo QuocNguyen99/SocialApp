@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { StyleSheet, TextInput, View, TouchableHighlight, TouchableWithoutFeedback, ScrollView, Alert, Image } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, TextInput, View, TouchableHighlight, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
@@ -9,10 +9,26 @@ import Icon from '../Icon'
 import Title from '../../components/Title';
 import ListImages from '../../components/ListImages';
 
-function CreatePost({ closeModal, infoUser }) {
+function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle, idPost }) {
     const [height, setHeight] = useState(50);
     const [content, setContent] = useState('');
     const [images, setImages] = useState([])
+
+    useEffect(() => {
+        getPostById(idPost)
+    }, [])
+
+    const getPostById = async (idPost) => {
+        try {
+            if (title !== 'Edit Post') return;
+            const { error, data } = await postApi.getPostById(idPost);
+            setImages([...data.image]);
+            setContent(data.content);
+        } catch (error) {
+            console.log('Post By Id', datERROR.messagea);
+        }
+
+    }
     const styleInput = {
         fontSize: 16,
         height: height,
@@ -50,18 +66,30 @@ function CreatePost({ closeModal, infoUser }) {
         setHeight(e)
     }
 
-    const handlePost = async (content, images) => {
+    const onPressCancelBottomSheet = () => {
+        closeModal();
+        if (closeBottomSheet !== undefined) return closeBottomSheet()
+    }
+
+    const handlePost = async (idPost, content, images) => {
         try {
-            if (content?.trim() === undefined && (images?.length === 0 || images === undefined)) return Alert.alert('Notification', `Please enter something`)
+            if (content?.trim() === undefined && (images?.length === 0 || images === undefined)) return Alert.alert('Notification', `Please enter something`);
             const postTemp = {
                 content: content,
                 image: images,
                 author: infoUser.id
             }
             const token = await AsyncStorage.getItem('Token');
-            const { error, data } = await postApi.createPost(postTemp, token);
-            return error ? Alert.alert('Notification', `Post don't success`) :
-                Alert.alert('Notification', 'Success', [{ text: 'Ok', onPress: () => closeModal() }]);
+            console.log(title !== 'Edit Post');
+            let result;
+            if (title !== 'Edit Post') {
+                result = await postApi.createPost(postTemp, token);
+            } else {
+                result = await postApi.updatePost(idPost, postTemp, token)
+            }
+            const { error, data } = result;
+            return error ? Alert.alert(title, `Post don't success`) :
+                Alert.alert(title, 'Success', [{ text: 'Ok', onPress: () => onPressCancelBottomSheet() }]);
         } catch (error) {
             console.log('Error', error.message);
         }
@@ -89,14 +117,14 @@ function CreatePost({ closeModal, infoUser }) {
                     onPress={closeModal}>
                     <Icon name='arrow-left' color='black' size={20} />
                 </TouchableHighlight>
-                <Title title='Create Post' />
+                <Title title={title} />
                 <View style={styles.btnSubmit}>
                     <TouchableHighlight
                         style={styles.icon}
                         underlayColor='lightgray'
-                        onPress={() => handlePost(content, images)}
+                        onPress={() => handlePost(idPost, content, images)}
                     >
-                        <Title title='Post' style={styles.textSubmit} />
+                        <Title title={buttonTitle} style={styles.textSubmit} />
                     </TouchableHighlight>
                 </View>
             </View>
@@ -105,6 +133,7 @@ function CreatePost({ closeModal, infoUser }) {
                     <TextInput
                         placeholder='What are you thinking?'
                         multiline={true}
+                        value={content}
                         onChangeText={(text) => setContent(text)}
                         onContentSizeChange={(e) => updateSize(e.nativeEvent.contentSize.height)}
                         style={styleInput} />

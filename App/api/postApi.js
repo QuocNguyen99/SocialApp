@@ -5,7 +5,7 @@ const postApi = {
     createPost: (post, token) => {
         try {
             const url = ENDPOINT.CREATE_POST;
-
+            console.log('123');
             return axiosClient.post(
                 url,
                 {
@@ -41,6 +41,65 @@ const postApi = {
             console.log('err', error.message);
         }
     },
+    getPostById: (id) => {
+        try {
+            const url = ENDPOINT.GET_POST_BY_ID;
+            return axiosClient.get(
+                url,
+                {
+                    params: {
+                        id: id
+                    }
+                }
+            )
+        } catch (error) {
+            console.log('err', error.message);
+        }
+    },
+    updatePost: (idPost, post, token) => {
+        try {
+            const url = ENDPOINT.UPDATE_POST;
+            return axiosClient.put(
+                url,
+                {
+                    content: post.content,
+                    image: post.image
+                },
+                {
+                    headers: {
+                        'token': token
+                    },
+                    params: {
+                        id: idPost
+                    }
+                }
+            )
+        } catch (error) {
+            console.log('err', error.message);
+        }
+    },
+    deletePost: (idUser, id, author, token) => {
+        try {
+            const url = ENDPOINT.DELETE_POST;
+            return axiosClient.delete(
+                url,
+                {
+                    headers: {
+                        'token': token
+                    },
+                    params: {
+                        id: id
+                    }
+                },
+                {
+                    idUser: idUser,
+                    author: author
+                }
+            )
+        } catch (error) {
+            console.log('err', error.message);
+        }
+    },
     likePost: (id, idUser, token) => {
         try {
             const url = ENDPOINT.LIKE_POST;
@@ -48,7 +107,6 @@ const postApi = {
                 url,
                 {
                     idUser: idUser,
-
                 },
                 {
                     headers: {
