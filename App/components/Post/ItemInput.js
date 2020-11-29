@@ -36,7 +36,6 @@ export default function ItemInput({ onPress }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         marginTop: 15,
         paddingHorizontal: 20,
         paddingVertical: 10,

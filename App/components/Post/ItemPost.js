@@ -23,7 +23,7 @@ function ItemPost({ item, idUser }) {
     let { _id, author, createAt, content, image, likePost: likes } = item;
     const [countLike, setCountLike] = useState(likes.length);
     const { displayName, imageAuthor } = author;
-    createAt = moment(createAt).startOf('minute').fromNow();
+    createAt = moment(createAt).startOf('second').fromNow();
 
     useEffect(() => {
         changeColor(likes, idUser)
@@ -140,6 +140,7 @@ function ItemPost({ item, idUser }) {
                         author._id == idUser ?
                             <TouchableHighlight
                                 underlayColor='gray'
+                                style={{ padding: 8 }}
                                 onPress={openVisiableBottomSheet}>
                                 <Icon name='ellipsis-v' color='black' size={20} />
                             </TouchableHighlight>

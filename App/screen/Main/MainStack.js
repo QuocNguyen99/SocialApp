@@ -71,7 +71,7 @@ function MainStack({ infoUser }) {
                         component={Profile}
                         options={{
                             tabBarLabel: ({ color }) => (
-                                <Icon name='user-circle-o' size={30} color={color} />
+                                <Icon name='user-o' size={30} color={color} />
                             ),
                         }} />
                 </Tab.Navigator>

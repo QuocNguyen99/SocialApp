@@ -80,7 +80,6 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
                 author: infoUser.id
             }
             const token = await AsyncStorage.getItem('Token');
-            console.log(title !== 'Edit Post');
             let result;
             if (title !== 'Edit Post') {
                 result = await postApi.createPost(postTemp, token);
