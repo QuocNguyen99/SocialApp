@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { } from 'react'
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 
 import Text from '../components/Text'
@@ -10,11 +10,6 @@ export default function StartScreen({ navigation }) {
     const navigationToLogin = () => {
         navigation.navigate('LoginScreen')
     }
-
-    useEffect(() => {
-        setTimeout(navigationToLogin, 1000);
-    }, [])
-
     return (
         <View style={styles.container}>
             <Image

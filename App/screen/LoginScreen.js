@@ -2,14 +2,14 @@ import React from 'react';
 import { ImageBackground, StyleSheet, Text, View, Alert } from 'react-native';
 import FormField from '../components/Form/FormField'
 import * as Yup from 'yup';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux'
 
 import ButtonSubmit from '../components/Form/ButtonSubmit'
 import TextTouch from '../components/TextTouch'
 import TextInputField from '../components/Form/TextInputField';
 import userApi from '../api/userApi';
-import { saveUser } from '../redux/action'
+import { saveUser } from '../redux/action';
+import authStorage from '../auth/storage'
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label('Email'),
@@ -21,9 +21,10 @@ function LoginScreen({ navigation, handleSaveInfo }) {
         try {
             const { error, data } = await userApi.login(value);
             if (error) return Alert.alert('Notification', 'Have problem');
-            await AsyncStorage.setItem('Token', data.token);
+            await authStorage.storeToken(data.token)
+            console.log(data.user);
             handleSaveInfo(data.user);
-            navigation.navigate('MainScreen');
+            navigation.navigate('MainScreen')
         } catch (error) {
             Alert.alert('Error', error.message);
         }

@@ -4,7 +4,7 @@ import { FlatList, View, StyleSheet, ActivityIndicator, RefreshControl } from 'r
 import ItemPost from './ItemPost';
 import postApi from '../../api/postApi'
 
-export default function Post() {
+export default function Post({ handelOnScroll }) {
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -12,23 +12,18 @@ export default function Post() {
 
     useEffect(() => {
         getPosts();
-    }, [])
-
-    useEffect(() => {
-        getPosts(setIsLoading);
     }, [page])
 
-    const getPosts = async (setIsLoading) => {
+    const getPosts = async () => {
         try {
-            setIsLoading ? setIsLoading(true) : null
+            console.log(page);
             const { data } = await postApi.getListPost(page);
             if (page === 1) {
                 setPosts([...data]);
             } else {
                 setPosts([...posts, ...data]);
+                console.log(posts.map(e => e.content));
             }
-
-            setIsLoading ? setIsLoading(false) : null
         } catch (error) {
             console.log('Posts', error.message);
         }
@@ -38,42 +33,37 @@ export default function Post() {
         setPage(page + 1);
     }
 
-    const renderFooter = () => (
-        isLoading ? (
-            <View style={styles.footer}>
-                <ActivityIndicator size='small' color='#1E90FF' />
-            </View>
-        )
-            : null
-    )
-
-    const onRefresh = () => {
-        if (refresh == false) {
-            return setPage(1);
+    const handleOnRefresh = async () => {
+        try {
+            setPage(1);
+            const { data } = await postApi.getListPost(page);
+            setPosts([...data]);
+        } catch (error) {
+            console.log('Posts', error.message);
         }
-    };
+    }
 
     return (
         <FlatList
-
             style={styles.container}
             data={posts}
             keyExtractor={(item) => item._id.toString()}
             renderItem={({ item }) => (
                 <ItemPost item={item} />
             )}
-            refreshControl={
-                <RefreshControl refreshing={refresh} onRefresh={() => onRefresh()} colors={['#1E90FF']} />
-            }
             onEndReached={() => handleLoadMore()}
-            onEndReachedThreshold={0.1}
-            ListFooterComponent={renderFooter}
+            onEndReachedThreshold={0.2}
+            refreshing={refresh}
+            onRefresh={() => handleOnRefresh()}
+            showsVerticalScrollIndicator={false}
+            onScroll={handelOnScroll()}
         />
     )
 }
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 65,
         marginBottom: 10
     },
     footer: {

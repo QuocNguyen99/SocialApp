@@ -7,7 +7,7 @@ const connectionConfig = {
     reconnectionAttempts: 100000,
     transports: ['websocket'], // you need to explicitly tell it to use websockets
 };
-const socket = io('http://192.168.1.66:3000/', connectionConfig);
+const socket = io('http://192.168.1.4:3000/', connectionConfig);
 socket.on('connect', () => {
 });
 export default socket;

@@ -1,4 +1,4 @@
-import React, { } from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { connect } from 'react-redux'
@@ -6,10 +6,24 @@ import { connect } from 'react-redux'
 import Icon from '../../components/Icon';
 import Header from '../../components/Header';
 import HomeScreen from '../Main/HomeScreen';
+import authStorage from '../../auth/storage'
+import { saveUser } from '../../redux/action';
 
 const Tab = createMaterialTopTabNavigator();
 
-function MainStack({ infoUser }) {
+function MainStack({ infoUser, handleSaveInfo }) {
+
+    useEffect(() => {
+        handleDispatchInfo()
+    }, [])
+
+    const handleDispatchInfo = async () => {
+        if (Object.keys(infoUser).length === 0) {
+            const user = await authStorage.getUser();
+            handleSaveInfo(user);
+        }
+    }
+
     const Chat = () => (
         <View style={{ flex: 1 }}>
             <Text>Chat</Text>
@@ -85,7 +99,13 @@ function mapStateToProps(state) {
         infoUser: state.user.infoUser
     }
 }
-export default connect(mapStateToProps)(MainStack)
+
+function mapDispatchToProps(dispatch) {
+    return {
+        handleSaveInfo: (info) => dispatch(saveUser(info))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(MainStack)
 
 const styles = StyleSheet.create({
     container: {

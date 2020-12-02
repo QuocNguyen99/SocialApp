@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, TouchableHighlight, Modal, Alert } from 'react-
 import ImageViewer from 'react-native-image-zoom-viewer';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheet, ListItem } from 'react-native-elements';
 
 import Avata from './Avata'
@@ -13,7 +12,8 @@ import postApi from '../../api/postApi';
 import socket from '../../socket/socket';
 import SOCKET_URL from '../../socket/constant'
 import Icon from '../Icon';
-import ModalPost from '../Post/ModalPost'
+import ModalPost from '../Post/ModalPost';
+import authStorage from '../../auth/storage'
 
 function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
@@ -23,7 +23,7 @@ function ItemPost({ item, idUser }) {
     let { _id, author, createAt, content, image, likePost: likes } = item;
     const [countLike, setCountLike] = useState(likes.length);
     const { displayName, imageAuthor } = author;
-    createAt = moment(createAt).startOf('second').fromNow();
+    createAt = moment(createAt).startOf('minute').fromNow();
 
     useEffect(() => {
         changeColor(likes, idUser)
@@ -71,7 +71,7 @@ function ItemPost({ item, idUser }) {
     // method like post 
     const likePost = async (id, idUser) => {
         try {
-            const token = await AsyncStorage.getItem('Token');
+            const token = await authStorage.getToken()
             await postApi.likePost(id, idUser, token);
             sendCountLikeToSocket(id);
             color == "dodgerblue" ? setColor('gray') : setColor('dodgerblue')
@@ -89,7 +89,7 @@ function ItemPost({ item, idUser }) {
     //xóa bài đăng
     const deletePost = async (idUser, id) => {
         try {
-            const token = await AsyncStorage.getItem('Token');
+            const token = await authStorage.getToken()
             const { error } = await postApi.deletePost(idUser, id, author, token);
             if (!error) setVisiableBottomSheet(false)
         } catch (error) {
@@ -140,7 +140,6 @@ function ItemPost({ item, idUser }) {
                         author._id == idUser ?
                             <TouchableHighlight
                                 underlayColor='gray'
-                                style={{ padding: 8 }}
                                 onPress={openVisiableBottomSheet}>
                                 <Icon name='ellipsis-v' color='black' size={20} />
                             </TouchableHighlight>
@@ -205,7 +204,7 @@ function ItemPost({ item, idUser }) {
 
 function mapStateToProps(state) {
     return {
-        idUser: state.user.infoUser.id
+        idUser: state.user.infoUser._id
     }
 }
 

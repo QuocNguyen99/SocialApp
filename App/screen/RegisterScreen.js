@@ -11,13 +11,19 @@ import userApi from '../api/userApi';
 const valaditionSchema = Yup.object().shape({
     email: Yup.string().required().email().label('Email'),
     password: Yup.string().required().min(5).label('Password'),
-    displayname: Yup.string().required().min(1).label('Displayname')
+    displayname: Yup.string().required().min(1).label('Displayname'),
+    confirm: Yup.string().required().min(5).label('Confirm password').test(
+        "confirm-test",
+        "Password and confirm password should match",
+        function (value) {
+            return value === this.parent.password;
+        }
+    )
 })
 
 export default function RegisterScreen({ navigation }) {
 
     const create = async (value) => {
-        if (value.confirm.trim() !== value.password.trim()) return Alert.alert('Register', 'Error Confirm Password');
         const newValue = {
             email: value.email,
             password: value.password,

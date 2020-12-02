@@ -17,7 +17,7 @@ export default function Header() {
 
 const styles = StyleSheet.create({
     containerSearch: {
-        flex: 1,
+        height: 65,
         flexDirection: 'row',
         backgroundColor: 'white',
         alignItems: 'center',

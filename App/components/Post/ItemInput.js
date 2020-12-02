@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, Modal } from 'react-native';
+import { StyleSheet, Text, View, Modal, Animated } from 'react-native';
 
 import Avata from './Avata'
 import { TouchableHighlight } from 'react-native-gesture-handler';
@@ -17,7 +17,7 @@ export default function ItemInput({ onPress }) {
         setVisiable(true);
     }
     return (
-        <View style={styles.container}>
+        <Animated.View style={styles.container}>
             <Avata image='' />
             <View style={styles.subContainer}>
                 <TouchableHighlight
@@ -30,13 +30,17 @@ export default function ItemInput({ onPress }) {
             <Modal visible={visiable} animationType='slide'>
                 <ModalPost closeModal={closeModal} title='Create Post' buttonTitle='Post' />
             </Modal>
-        </View>
+        </Animated.View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 15,
+        position: 'absolute',
+        top: 5,
+        left: 0,
+        right: 0,
+        height: 70,
         paddingHorizontal: 20,
         paddingVertical: 10,
         backgroundColor: 'white',

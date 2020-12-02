@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, TextInput, View, TouchableHighlight, ScrollView, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 
@@ -8,6 +7,7 @@ import postApi from '../../api/postApi';
 import Icon from '../Icon'
 import Title from '../../components/Title';
 import ListImages from '../../components/ListImages';
+import authStorage from '../../auth/storage'
 
 function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle, idPost }) {
     const [height, setHeight] = useState(50);
@@ -18,17 +18,6 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
         getPostById(idPost)
     }, [])
 
-    const getPostById = async (idPost) => {
-        try {
-            if (title !== 'Edit Post') return;
-            const { error, data } = await postApi.getPostById(idPost);
-            setImages([...data.image]);
-            setContent(data.content);
-        } catch (error) {
-            console.log('Post By Id', datERROR.messagea);
-        }
-
-    }
     const styleInput = {
         fontSize: 16,
         height: height,
@@ -46,6 +35,20 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
         saveToPhotos: true,
         quality: 0.5
     };
+
+    // nếu k phải Edit thì return null phải thì set giá trị
+    const getPostById = async (idPost) => {
+        try {
+            if (title !== 'Edit Post') return;
+            const { error, data } = await postApi.getPostById(idPost);
+            setImages([...data.image]);
+            setContent(data.content);
+        } catch (error) {
+            console.log('Post By Id', error.messagea);
+        }
+
+    }
+
 
     const openLibary = () => {
         return ImagePicker.launchImageLibrary(options, (response) => {
@@ -77,9 +80,9 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
             const postTemp = {
                 content: content,
                 image: images,
-                author: infoUser.id
+                author: infoUser
             }
-            const token = await AsyncStorage.getItem('Token');
+            const token = await authStorage.getToken()
             let result;
             if (title !== 'Edit Post') {
                 result = await postApi.createPost(postTemp, token);
@@ -87,6 +90,7 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
                 result = await postApi.updatePost(idPost, postTemp, token)
             }
             const { error, data } = result;
+            console.log(error);
             return error ? Alert.alert(title, `Post don't success`) :
                 Alert.alert(title, 'Success', [{ text: 'Ok', onPress: () => onPressCancelBottomSheet() }]);
         } catch (error) {
@@ -155,7 +159,7 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
 
 function mapStateToProps(state) {
     return {
-        infoUser: state.user.infoUser
+        infoUser: state.user.infoUser._id
     }
 }
 export default connect(mapStateToProps)(CreatePost)
