@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, TextInput, View, TouchableHighlight, ScrollView, Alert } from 'react-native';
+import { StyleSheet, TextInput, View, TouchableHighlight, ScrollView, Alert, Image } from 'react-native';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 
@@ -118,7 +118,7 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
                     style={styles.icon}
                     underlayColor='gray'
                     onPress={closeModal}>
-                    <Icon name='arrow-left' color='black' size={20} />
+                    <Image source={require('../../../assets/icon/left-arrow.png')} />
                 </TouchableHighlight>
                 <Title title={title} />
                 <View style={styles.btnSubmit}>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderBottomColor: 'lightgray',
-        borderWidth: 1
+        borderBottomWidth: 1
     },
     footerContainer: {
         flex: 1,

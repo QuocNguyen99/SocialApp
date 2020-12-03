@@ -36,7 +36,7 @@ export default function Post({ handelOnScroll }) {
     const handleOnRefresh = async () => {
         try {
             setPage(1);
-            const { data } = await postApi.getListPost(page);
+            const { data } = await postApi.getListPost(1);
             setPosts([...data]);
         } catch (error) {
             console.log('Posts', error.message);
@@ -63,8 +63,6 @@ export default function Post({ handelOnScroll }) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 65,
-        marginBottom: 10
     },
     footer: {
         marginVertical: 5,

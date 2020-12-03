@@ -13,11 +13,13 @@ import socket from '../../socket/socket';
 import SOCKET_URL from '../../socket/constant'
 import Icon from '../Icon';
 import ModalPost from '../Post/ModalPost';
+import ModalComment from '../Comment/ModalComment'
 import authStorage from '../../auth/storage'
 
 function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
-    const [visiableEdit, setVisiableEdit] = useState(false)
+    const [visiableEdit, setVisiableEdit] = useState(false);
+    const [visiableComment, setVisiableComment] = useState(false)
     const [visiableBottomSheet, setVisiableBottomSheet] = useState(false)
     const [color, setColor] = useState();
     let { _id, author, createAt, content, image, likePost: likes } = item;
@@ -30,16 +32,26 @@ function ItemPost({ item, idUser }) {
     }, [likes.length])
 
     useEffect(() => {
-        getCountLikeFormSocket(setCountLike, _id);
+        let mount = true
+        getCountLikeFormSocket(setCountLike, _id, mount);
     }, [])
 
+
     // kết nối với socket nhận về data là length likes
-    const getCountLikeFormSocket = (setCountLike, id) => {
-        socket.on(SOCKET_URL.SERVER_SEND_COUNT_LIKE, (data) => {
-            if (data.id == id) {
-                setCountLike(data.count);
-            }
-        })
+    const getCountLikeFormSocket = (setCountLike, id, mount) => {
+        if (mount == true) {
+            socket.on(SOCKET_URL.SERVER_SEND_COUNT_LIKE, (data) => {
+                if (data.id == id) {
+                    setCountLike(data.count);
+                }
+            })
+        }
+        /**
+         * Disconnect when unmuont component
+         */
+        // await socket.on('disconnect', (socket) => {
+        //     console.log('Disconnect Socket!');
+        // });
     }
 
     //gửi len socket lượt like hiện tại
@@ -47,21 +59,12 @@ function ItemPost({ item, idUser }) {
         socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
     }
 
-    //mở react native viewer
-    const openModal = () => {
-        setVisiable(true)
-    }
-
-    const openModalEdit = () => {
-        setVisiableEdit(true);
-    }
-
     const closeModalEdit = () => {
         setVisiableEdit(false);
     }
 
-    const openVisiableBottomSheet = () => {
-        setVisiableBottomSheet(true)
+    const closeModalComment = () => {
+        setVisiableComment(false);
     }
 
     //option react native image viewer để show ảnh 
@@ -102,7 +105,7 @@ function ItemPost({ item, idUser }) {
             title: 'Edit Post',
             icon: 'pencil-square-o',
             titleStyle: { marginLeft: 5 },
-            onPress: () => openModalEdit()
+            onPress: () => setVisiableEdit(true)
         },
         {
             title: 'Delete Post',
@@ -139,8 +142,9 @@ function ItemPost({ item, idUser }) {
                     {
                         author._id == idUser ?
                             <TouchableHighlight
+                                style={{ padding: 5 }}
                                 underlayColor='gray'
-                                onPress={openVisiableBottomSheet}>
+                                onPress={() => setVisiableBottomSheet(true)}>
                                 <Icon name='ellipsis-v' color='black' size={20} />
                             </TouchableHighlight>
                             : null
@@ -158,7 +162,7 @@ function ItemPost({ item, idUser }) {
                 image.length == 0 ? null :
                     <TouchableHighlight
                         underlayColor='gray'
-                        onPress={openModal}>
+                        onPress={() => setVisiable(true)}>
                         <ImagePost images={image} />
                     </TouchableHighlight>
             }
@@ -176,7 +180,7 @@ function ItemPost({ item, idUser }) {
                 <Button
                     title='Comment'
                     iconName='commenting-o'
-                    onPress={() => alert('Cooment')} />
+                    onPress={() => setVisiableComment(true)} />
             </View>
             <Modal visible={visiable} transparent={true}>
                 <ImageViewer imageUrls={imageUrls} enableSwipeDown={true} onCancel={() => setVisiable(false)} />
@@ -197,6 +201,10 @@ function ItemPost({ item, idUser }) {
             </BottomSheet>
             <Modal visible={visiableEdit} animationType='slide'>
                 <ModalPost closeModal={closeModalEdit} closeBottomSheet={() => setVisiableBottomSheet(false)} title='Edit Post' buttonTitle='Edit' idPost={_id} />
+            </Modal>
+
+            <Modal visible={visiableComment} animationType='slide'>
+                <ModalComment closeModal={closeModalComment} />
             </Modal>
         </View>
     )
