@@ -58,7 +58,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         component={HomeScreen}
                         options={{
                             tabBarIcon: ({ color }) => (
-                                <Icon name='home' size={35} color={color} />
+                                <Icon name='address-card-o' size={30} color={color} />
                             ),
                         }}
                     />
@@ -67,7 +67,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         component={Chat}
                         options={{
                             tabBarIcon: ({ color }) => (
-                                <Icon name='comment-o' size={35} color={color} style='Regular' />
+                                <Icon name='comments-o' size={30} color={color} style='Regular' />
                             ),
                         }}
                     />
@@ -76,7 +76,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         component={Friend}
                         options={{
                             tabBarIcon: ({ color }) => (
-                                <Icon name='bell-o' size={35} color={color} />
+                                <Icon name='bell-o' size={30} color={color} />
                             ),
                         }} />
                     <Tab.Screen
@@ -84,7 +84,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         component={Profile}
                         options={{
                             tabBarIcon: ({ color }) => (
-                                <Icon name='user-o' size={35} color={color} />
+                                <Icon name='user-circle-o' size={30} color={color} />
                             ),
                         }} />
                 </Tab.Navigator>

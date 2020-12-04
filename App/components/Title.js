@@ -9,7 +9,7 @@ export default function Title({ title, style }) {
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 24,
+        fontSize: 22,
         fontFamily: 'Roboto-Regular',
         color: 'black'
     }

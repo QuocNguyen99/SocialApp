@@ -16,13 +16,12 @@ export default function Post({ handelOnScroll }) {
 
     const getPosts = async () => {
         try {
-            console.log(page);
+            if (refresh == true) return;
             const { data } = await postApi.getListPost(page);
             if (page === 1) {
                 setPosts([...data]);
             } else {
                 setPosts([...posts, ...data]);
-                console.log(posts.map(e => e.content));
             }
         } catch (error) {
             console.log('Posts', error.message);
@@ -35,9 +34,11 @@ export default function Post({ handelOnScroll }) {
 
     const handleOnRefresh = async () => {
         try {
+            setRefresh(true)
             setPage(1);
             const { data } = await postApi.getListPost(1);
             setPosts([...data]);
+            setRefresh(false)
         } catch (error) {
             console.log('Posts', error.message);
         }

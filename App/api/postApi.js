@@ -11,7 +11,6 @@ const postApi = {
                     content: post.content,
                     image: post.image,
                     author: post.author,
-                    comment: post.comment,
                     likePost: post.likePost
                 },
                 {

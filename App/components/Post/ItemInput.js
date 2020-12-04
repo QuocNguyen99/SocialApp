@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, Modal, Animated } from 'react-native';
+import { connect } from 'react-redux'
 
 import Avata from './Avata'
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import ModalPost from './ModalPost';
 
-
-export default function ItemInput({ onPress }) {
+function ItemInput({ onPress, imageUser }) {
     const [visiable, setVisiable] = useState(false)
-
     const closeModal = () => {
         setVisiable(false);
     }
@@ -18,7 +17,7 @@ export default function ItemInput({ onPress }) {
     }
     return (
         <Animated.View style={styles.container}>
-            <Avata image='' />
+            <Avata image={imageUser} />
             <View style={styles.subContainer}>
                 <TouchableHighlight
                     underlayColor='darkgray'
@@ -33,6 +32,13 @@ export default function ItemInput({ onPress }) {
         </Animated.View>
     )
 }
+function mapStateToProps(state) {
+    return {
+        imageUser: state.user.infoUser.image
+    }
+}
+
+export default connect(mapStateToProps)(ItemInput)
 
 const styles = StyleSheet.create({
     container: {

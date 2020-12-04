@@ -15,6 +15,7 @@ import Icon from '../Icon';
 import ModalPost from '../Post/ModalPost';
 import ModalComment from '../Comment/ModalComment'
 import authStorage from '../../auth/storage'
+import commentApi from '../../api/commentApi';
 
 function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
@@ -24,7 +25,8 @@ function ItemPost({ item, idUser }) {
     const [color, setColor] = useState();
     let { _id, author, createAt, content, image, likePost: likes } = item;
     const [countLike, setCountLike] = useState(likes.length);
-    const { displayName, imageAuthor } = author;
+    const [countCmt, setCountCmt] = useState('');
+    const { displayName, image: imageAuthor } = author;
     createAt = moment(createAt).startOf('minute').fromNow();
 
     useEffect(() => {
@@ -32,17 +34,36 @@ function ItemPost({ item, idUser }) {
     }, [likes.length])
 
     useEffect(() => {
-        let mount = true
-        getCountLikeFormSocket(setCountLike, _id, mount);
+        getLengthComment(_id);
     }, [])
 
+    useEffect(() => {
+        let mount = true
+        getCountLikeAndCmtFormSocket(setCountLike, _id, mount);
+    }, [])
+
+    const getLengthComment = async (id) => {
+
+        try {
+            const { data } = await commentApi.getListComments(id);
+            setCountCmt(data.length)
+        } catch (error) {
+            console.log('Count cmt', error.message);
+        }
+    }
 
     // kết nối với socket nhận về data là length likes
-    const getCountLikeFormSocket = (setCountLike, id, mount) => {
+    const getCountLikeAndCmtFormSocket = (setCountLike, id, mount) => {
         if (mount == true) {
             socket.on(SOCKET_URL.SERVER_SEND_COUNT_LIKE, (data) => {
                 if (data.id == id) {
                     setCountLike(data.count);
+                }
+            });
+            socket.on(SOCKET_URL.SERVER_SEND_COUNT_COMMENT, (data) => {
+                if (data.id == id) {
+                    console.log();
+                    setCountCmt(data.count);
                 }
             })
         }
@@ -56,6 +77,7 @@ function ItemPost({ item, idUser }) {
 
     //gửi len socket lượt like hiện tại
     const sendCountLikeToSocket = (id) => {
+        socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
         socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
     }
 
@@ -168,7 +190,7 @@ function ItemPost({ item, idUser }) {
             }
             <View style={styles.likeCmtContainer}>
                 <Text>{countLike}</Text>
-                <Text>2</Text>
+                <Text>{countCmt}</Text>
             </View>
             <View style={styles.footContainer}>
                 <Button
@@ -204,7 +226,7 @@ function ItemPost({ item, idUser }) {
             </Modal>
 
             <Modal visible={visiableComment} animationType='slide'>
-                <ModalComment closeModal={closeModalComment} />
+                <ModalComment closeModal={closeModalComment} id={_id} />
             </Modal>
         </View>
     )

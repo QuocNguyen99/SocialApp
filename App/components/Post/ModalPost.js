@@ -90,7 +90,6 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
                 result = await postApi.updatePost(idPost, postTemp, token)
             }
             const { error, data } = result;
-            console.log(error);
             return error ? Alert.alert(title, `Post don't success`) :
                 Alert.alert(title, 'Success', [{ text: 'Ok', onPress: () => onPressCancelBottomSheet() }]);
         } catch (error) {

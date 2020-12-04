@@ -6,6 +6,8 @@ const ENDPOINT = {
     DELETE_POST: '/posts/:id',
     GET_POST_BY_ID: '/posts/getpostbyid/:id',
     UPDATE_POST: '/posts/:id',
-    LIKE_POST: '/posts/like/:id'
+    LIKE_POST: '/posts/like/:id',
+    GET_LIST_COMMENT_BY_ID: '/comment/:id',
+    CREATE_COMMENT_BY_ID: '/comment/:id',
 }
 export default ENDPOINT;
