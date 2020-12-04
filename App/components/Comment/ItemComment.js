@@ -13,8 +13,8 @@ export default function ItemComment({ item }) {
             <View style={{ flexDirection: 'row' }}>
                 <Avata image={author.image} />
                 <View style={styles.bodyContainer}>
-                    <Text style={{ fontFamily: 'Roboto-Bold' }}>{author.displayName}</Text>
-                    <Text>{content}</Text>
+                    <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16 }}>{author.displayName}</Text>
+                    <Text style={{ fontSize: 16 }}>{content}</Text>
                 </View>
             </View>
             <View style={styles.timeContainer}>
@@ -42,9 +42,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 10,
         marginLeft: 70
-    },
-    text: {
-        fontSize: 16
-    },
-
+    }
 })
