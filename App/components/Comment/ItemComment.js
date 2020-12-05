@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         padding: 10,
         borderRadius: width / 20,
-        backgroundColor: 'lightgray'
+        backgroundColor: '#F1F2F6'
     },
     timeContainer: {
         flexDirection: 'row',

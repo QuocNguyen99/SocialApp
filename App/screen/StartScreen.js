@@ -7,9 +7,6 @@ const width = Dimensions.get('screen').width;
 
 export default function StartScreen({ navigation }) {
 
-    const navigationToLogin = () => {
-        navigation.navigate('LoginScreen')
-    }
     return (
         <View style={styles.container}>
             <Image

@@ -1,23 +1,25 @@
 import React from 'react'
 import { StyleSheet, Text, View, TextInput } from 'react-native'
 
-export default function AppInput({ placeholder, style, otherProps }) {
+export default function AppInput({ style, styleInput, ...otherProps }) {
+    console.log('123');
     return (
         <View style={[styles.containerInput, style]} >
-            <TextInput placeholder={placeholder} style={styles.input} {...otherProps} />
+            <TextInput style={[styles.input]} {...otherProps} />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     containerInput: {
-        flex: 1,
         borderColor: 'gray',
+        backgroundColor: 'blue',
         borderWidth: 1,
-        borderRadius: 30,
+        borderRadius: 30
     },
     input: {
         paddingVertical: 5,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        overflow: 'hidden'
     }
 })

@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 
 import Icon from '../../components/Icon';
 import HomeScreen from '../Main/HomeScreen';
+import SearchScreen from '../Main/SearchScreen';
 import authStorage from '../../auth/storage'
 import { saveUser } from '../../redux/action';
 
@@ -22,12 +23,6 @@ function MainStack({ infoUser, handleSaveInfo }) {
             handleSaveInfo(user);
         }
     }
-
-    const Chat = () => (
-        <View style={{ flex: 1 }}>
-            <Text>Chat</Text>
-        </View>
-    )
 
     const Friend = () => (
         <View style={{ flex: 1 }}>
@@ -63,11 +58,11 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         }}
                     />
                     <Tab.Screen
-                        name="Chat"
-                        component={Chat}
+                        name="Search"
+                        component={SearchScreen}
                         options={{
                             tabBarIcon: ({ color }) => (
-                                <Icon name='comments-o' size={30} color={color} style='Regular' />
+                                <Icon name='search' size={30} color={color} style='Regular' />
                             ),
                         }}
                     />
