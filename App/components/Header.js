@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native';
 import Icon from './Icon'
 
 const { width } = Dimensions.get("screen");
@@ -9,7 +9,11 @@ export default function Header() {
         <View style={styles.containerSearch}>
             <Text style={styles.title}>DOLPHIN</Text>
             <View style={styles.search}>
-                <Icon name='search' size={25} color='black' style={styles.a} onPress={() => alert('Search')} />
+                <TouchableOpacity
+                    onPress={() => alert('Chat')}
+                >
+                    <Image source={require('../../assets/icon/messenger.png')} />
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -22,7 +26,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginHorizontal: 15,
+        paddingHorizontal: 15,
         marginBottom: -5
     },
     search: {

@@ -54,7 +54,6 @@ function ModalComment({ closeModal, idUser, id }) {
         } catch (error) {
             console.log('Comment', error.message);
         }
-
     }
 
     return (
