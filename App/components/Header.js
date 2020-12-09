@@ -12,7 +12,7 @@ export default function Header() {
                 <TouchableOpacity
                     onPress={() => alert('Chat')}
                 >
-                    <Image source={require('../../assets/icon/messenger.png')} />
+                    <Image source={require('../../assets/icon/message-blue.png')} />
                 </TouchableOpacity>
             </View>
         </View>

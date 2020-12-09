@@ -27,28 +27,33 @@ function ItemPost({ item, idUser }) {
     const [countLike, setCountLike] = useState(likes.length);
     const [countCmt, setCountCmt] = useState('');
     const { displayName, image: imageAuthor } = author;
-    createAt = moment(createAt).startOf('minute').fromNow();
+    createAt = moment(createAt).startOf('minutes').fromNow();
 
     useEffect(() => {
-        changeColor(likes, idUser)
+        let mount = true
+        changeColor(likes, idUser, mount)
     }, [likes.length])
 
     useEffect(() => {
-        getLengthComment(_id);
+        let mount = true
+        getLengthComment(_id, mount);
+        return () => { mount = false };
     }, [])
 
     useEffect(() => {
         let mount = true
         getCountLikeAndCmtFormSocket(setCountLike, _id, mount);
+        return () => { mount = false };
     }, [])
 
-    const getLengthComment = async (id) => {
-
-        try {
-            const { data } = await commentApi.getListComments(id);
-            setCountCmt(data.length)
-        } catch (error) {
-            console.log('Count cmt', error.message);
+    const getLengthComment = async (id, mount) => {
+        if (mount == true) {
+            try {
+                const { data } = await commentApi.getListComments(id);
+                setCountCmt(data.length)
+            } catch (error) {
+                console.log('Count cmt', error.message);
+            }
         }
     }
 
@@ -62,7 +67,6 @@ function ItemPost({ item, idUser }) {
             });
             socket.on(SOCKET_URL.SERVER_SEND_COUNT_COMMENT, (data) => {
                 if (data.id == id) {
-                    console.log();
                     setCountCmt(data.count);
                 }
             })
@@ -99,16 +103,18 @@ function ItemPost({ item, idUser }) {
             const token = await authStorage.getToken()
             await postApi.likePost(id, idUser, token);
             sendCountLikeToSocket(id);
-            color == "dodgerblue" ? setColor('gray') : setColor('dodgerblue')
+            color == "dodgerblue" ? setColor('black') : setColor('dodgerblue')
         } catch (error) {
             console.log('Like Post', error.message);
         }
     }
 
     //đổi màu buton like khi đã like
-    const changeColor = (likes, idUser) => {
-        const result = likes.filter(e => e == idUser);
-        return result.length > 0 ? setColor('dodgerblue') : setColor('gray')
+    const changeColor = (likes, idUser, mount) => {
+        if (mount == true) {
+            const result = likes.filter(e => e == idUser);
+            return result.length > 0 ? setColor('dodgerblue') : setColor('black')
+        }
     }
 
     //xóa bài đăng

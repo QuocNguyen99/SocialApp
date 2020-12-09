@@ -9,7 +9,7 @@ export default function AppInput({ style, styleInput, entering, removeSearch, ..
             <TextInput style={[styles.input]} {...otherProps} />
             {
                 entering > 0 ? (
-                    <TouchableOpacity style={{ marginRight: 20 }} onPress={() => removeSearch()}>
+                    <TouchableOpacity style={{ marginRight: 15, padding: 5 }} onPress={() => removeSearch()}>
                         <Image source={require(`../../../assets/icon/cancel.png`)} style={{ width: 10, height: 10 }} />
                     </TouchableOpacity>
                 )

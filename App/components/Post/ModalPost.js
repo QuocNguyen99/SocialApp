@@ -52,7 +52,6 @@ function CreatePost({ closeBottomSheet, closeModal, infoUser, title, buttonTitle
 
     const openLibary = () => {
         return ImagePicker.launchImageLibrary(options, (response) => {
-
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {

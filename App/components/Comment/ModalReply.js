@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, TouchableHighlight, View, Image, TextInput, TouchableOpacity, ScrollView, Dimensions, FlatList } from 'react-native';
+import { StyleSheet, TouchableHighlight, View, Image, Dimensions, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 
-import ItemComment from './ItemComment'
-import Title from '../../components/Title';
-import Icon from '../../components/Icon'
+import Title from '../Title'
+import ItemCommentReply from './ItemCommentReply';
+import Icon from '../../components/Icon';
 import commentApi from '../../api/commentApi';
 import authStorage from '../../auth/storage';
-import SOCKET_URL from '../../socket/constant';
-import socket from '../../socket/socket';
 
 const { height } = Dimensions.get('screen');
 
-function ModalComment({ closeModal, idUser, id }) {
+function ModalReply({ item, closeModal, idUser }) {
     const [text, setText] = useState('');
     const [heightInput, setHeightInput] = useState(60);
-    const [listComment, setListComment] = useState([]);
+    const [listReply, setListReply] = useState([]);
 
     useEffect(() => {
-        getListComment(id);
-    }, [])
+        getListReply(item._id)
+    }, [text.length])
+
+    const getListReply = async (idCmt) => {
+        try {
+            const { error, data } = await commentApi.getListReply(idCmt);
+            if (!error) {
+                setListReply([...data]);
+            }
+        } catch (error) {
+            console.log('Reply', error.message);
+        }
+    }
 
     const updateSize = (e) => {
         setHeightInput(e)
@@ -27,29 +36,21 @@ function ModalComment({ closeModal, idUser, id }) {
     const styleInput = {
         height: heightInput
     }
-
-    const getListComment = async (id) => {
-        const { data } = await commentApi.getListComments(id);
-        setListComment([...data])
-    }
-
-    const sendCountCommentToSocket = (id) => {
-        socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_COMMENT, id);
-    }
-
-    const handleComment = async (idUser, id, text) => {
+    console.log('IdPOST', item._id);
+    const handleCommentReply = async (idUser, id, idComment, text) => {
         try {
+            console.log('1');
             const token = await authStorage.getToken();
             const comment = {
                 content: text.trim(),
                 author: idUser,
-                idPost: id
+                idPost: id,
+                idComment: idComment
             }
-            const { error } = await commentApi.createComments(id, comment, token)
+            console.log(comment);
+            const { error } = await commentApi.createCommentReply(idComment, comment, token)
             if (!error) {
                 setText('');
-                getListComment(id);
-                sendCountCommentToSocket(id)
             }
         } catch (error) {
             console.log('Comment', error.message);
@@ -66,17 +67,19 @@ function ModalComment({ closeModal, idUser, id }) {
                     {/* <Icon name='arrow-left' color='black' size={20} /> */}
                     <Image source={require('../../../assets/icon/left-arrow.png')} />
                 </TouchableHighlight>
-                <Title title='Comment' />
+                <Title title='Reply' />
             </View>
             <View style={styles.bodyContainer}>
-                <FlatList
-                    data={listComment}
-                    keyExtractor={(item) => item._id.toString()}
-                    renderItem={({ item }) => (
-                        <ItemComment item={item} />
-                    )}
-                />
-
+                <ItemCommentReply item={item} isReply={true} />
+                <View style={styles.subComment}>
+                    <FlatList
+                        data={listReply}
+                        keyExtractor={(item) => item._id.toString()}
+                        renderItem={({ item }) => (
+                            <ItemCommentReply item={item} />
+                        )}
+                    />
+                </View>
             </View>
             <View style={[styles.footerContainer, styleInput]} keyboardShouldPersistTaps={'always'}>
                 <TextInput
@@ -92,7 +95,7 @@ function ModalComment({ closeModal, idUser, id }) {
                 {
                     text.length > 0 ? (
                         <TouchableOpacity
-                            onPress={() => handleComment(idUser, id, text)}
+                            onPress={() => handleCommentReply(idUser, item.idPost, item._id, text)}
                             style={{ paddingHorizontal: 5 }}
                         >
                             <Icon name='send' color='dodgerblue' />
@@ -103,17 +106,22 @@ function ModalComment({ closeModal, idUser, id }) {
         </View>
     )
 }
+
 function mapStateToProps(state) {
     return {
         idUser: state.user.infoUser._id
     }
 }
 
-export default connect(mapStateToProps)(ModalComment)
+export default connect(mapStateToProps)(ModalReply)
 
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    bodyContainer: {
+        flex: 1,
+        margin: 10
     },
     headerContainer: {
         flexDirection: 'row',
@@ -123,10 +131,9 @@ const styles = StyleSheet.create({
         borderBottomColor: 'lightgray',
         borderBottomWidth: 1
     },
-    bodyContainer: {
-        flex: 1,
-        marginVertical: 10,
-        paddingHorizontal: 10,
+    icon: {
+        padding: 5,
+        marginLeft: 5
     },
     footerContainer: {
         flexDirection: 'row',
@@ -137,13 +144,12 @@ const styles = StyleSheet.create({
         height: height / 15,
         paddingHorizontal: 10
     },
-    icon: {
-        padding: 5,
-        marginLeft: 5
-    },
     input: {
         flex: 1,
         paddingHorizontal: 5,
         fontSize: 18
+    },
+    subComment: {
+        marginLeft: 40
     }
 })

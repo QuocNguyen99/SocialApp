@@ -119,6 +119,21 @@ const postApi = {
         } catch (error) {
             console.log('Error', error.message);
         }
+    },
+    search: (content) => {
+        try {
+            const url = ENDPOINT.SEARCH_POST_USER;
+            return axiosClient.get(
+                url,
+                {
+                    params: {
+                        'content': content
+                    }
+                },
+            )
+        } catch (error) {
+            console.log('Error', error.message);
+        }
     }
 }
 

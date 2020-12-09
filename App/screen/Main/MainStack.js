@@ -14,11 +14,12 @@ const Tab = createBottomTabNavigator();
 function MainStack({ infoUser, handleSaveInfo }) {
 
     useEffect(() => {
-        handleDispatchInfo()
+        let mount = true
+        handleDispatchInfo(mount)
     }, [])
 
-    const handleDispatchInfo = async () => {
-        if (Object.keys(infoUser).length === 0) {
+    const handleDispatchInfo = async (mount) => {
+        if (Object.keys(infoUser).length === 0 && mount == true) {
             const user = await authStorage.getUser();
             handleSaveInfo(user);
         }
@@ -42,7 +43,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                 <Tab.Navigator
                     tabBarOptions={{
                         activeTintColor: 'dodgerblue',
-                        inactiveTintColor: 'gray',
+                        inactiveTintColor: 'black',
                         showLabel: false,
                         indicatorStyle: {
                             backgroundColor: 'dodgerblue'
@@ -62,7 +63,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         component={SearchScreen}
                         options={{
                             tabBarIcon: ({ color }) => (
-                                <Icon name='search' size={30} color={color} style='Regular' />
+                                <Icon name='search' size={30} color={color} />
                             ),
                         }}
                     />

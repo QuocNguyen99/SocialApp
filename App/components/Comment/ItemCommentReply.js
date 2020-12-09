@@ -3,17 +3,12 @@ import { StyleSheet, Text, View, Dimensions, TouchableWithoutFeedback, Modal } f
 
 import Avata from '../Post/Avata'
 import moment from 'moment';
-import ModalReply from './ModalReply'
 
 const { width } = Dimensions.get('screen');
 export default function ItemComment({ item }) {
-    const [visiableReply, setVisiableReply] = useState(false);
     let { content, author, createAt } = item;
     createAt = moment(createAt).startOf('minute').fromNow();
 
-    const closeModalReply = () => {
-        setVisiableReply(false)
-    }
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row' }}>
@@ -26,15 +21,8 @@ export default function ItemComment({ item }) {
             <View style={styles.timeContainer}>
                 <Text>{createAt}</Text>
                 <Text style={{ marginLeft: 20 }}>Like</Text>
-                <TouchableWithoutFeedback onPress={() => setVisiableReply(true)}>
-                    <Text style={{ marginLeft: 20 }}>Reply</Text>
-                </TouchableWithoutFeedback>
             </View>
-            <Modal visible={visiableReply} animationType='fade'>
-                <ModalReply closeModal={closeModalReply} item={item} isReply={true} />
-            </Modal>
         </View>
-
     )
 }
 
