@@ -23,7 +23,7 @@ export default function AppInput({ style, styleInput, entering, removeSearch, ..
 const styles = StyleSheet.create({
     containerInput: {
         flexDirection: 'row',
-        backgroundColor: 'lightgray',
+        backgroundColor: 'white',
         borderRadius: 30,
         alignItems: 'center'
     },

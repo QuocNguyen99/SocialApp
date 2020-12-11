@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import Icon from '../../components/Icon';
 import HomeScreen from '../Main/HomeScreen';
 import SearchScreen from '../Main/SearchScreen';
+import ProfileScreen from './ProfileScreen';
 import authStorage from '../../auth/storage'
 import { saveUser } from '../../redux/action';
 
@@ -77,7 +78,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         }} />
                     <Tab.Screen
                         name="Profile"
-                        component={Profile}
+                        component={ProfileScreen}
                         options={{
                             tabBarIcon: ({ color }) => (
                                 <Icon name='user-circle-o' size={30} color={color} />

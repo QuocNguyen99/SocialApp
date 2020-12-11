@@ -16,9 +16,10 @@ export default function SearchBar({ removeSearchText, value, onChangeText, butto
                 onChangeText={(value) => onChangeText(value)}
             />
             <TouchableOpacity
+                activeOpacity={0.7}
                 onPress={() => buttonSubmit(value)}
             >
-                <Text style={{ marginHorizontal: 5, color: 'blue' }}>Search</Text>
+                <Text style={{ marginHorizontal: 5, color: 'white', fontFamily: 'Roboto-Medium' }}>Search</Text>
             </TouchableOpacity>
         </View>
     )
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'dodgerblue',
         overflow: 'hidden',
         padding: 10
     }
