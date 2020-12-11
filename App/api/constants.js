@@ -9,6 +9,7 @@ const ENDPOINT = {
     LIKE_POST: '/posts/like/:id',
     GET_LIST_COMMENT_BY_ID: '/comment/:id',
     GET_LIST_REPLY_BY_IDCOMMENT: '/comment/reply/:id',
+    GET_REPLY_LENGTH: '/comment/replylength/:id',
     CREATE_COMMENT_BY_ID: '/comment/:id',
     CREATE_REPLY_BY_IDCOMMENT: '/comment/reply/:id',
     SEARCH_POST_USER: '/posts/search/:content',

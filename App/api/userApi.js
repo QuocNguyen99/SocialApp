@@ -22,6 +22,21 @@ const userApi = {
                 password: user.password,
             }
         )
+    },
+    searchUser: (name) => {
+        try {
+            const url = ENDPOINT.SEARCH_POST_USER;
+            return axiosClient.get(
+                url,
+                {
+                    params: {
+                        'name': name
+                    }
+                },
+            )
+        } catch (error) {
+            console.log('Error', error.message);
+        }
     }
 }
 

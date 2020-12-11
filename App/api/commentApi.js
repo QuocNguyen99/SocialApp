@@ -75,6 +75,21 @@ const commentApi = {
             console.log('err', error.message);
         }
     },
+    getReplyLength: (id) => {
+        try {
+            const url = ENDPOINT.GET_REPLY_LENGTH;
+            return axiosClient.get(
+                url,
+                {
+                    params: {
+                        idCmt: id
+                    }
+                }
+            )
+        } catch (error) {
+            console.log('err', error.message);
+        }
+    },
 }
 
 export default commentApi;

@@ -120,14 +120,15 @@ const postApi = {
             console.log('Error', error.message);
         }
     },
-    search: (content) => {
+    searchPost: (content) => {
         try {
             const url = ENDPOINT.SEARCH_POST_USER;
             return axiosClient.get(
                 url,
                 {
                     params: {
-                        'content': content
+                        'content': content,
+                        // 'limit': limit
                     }
                 },
             )

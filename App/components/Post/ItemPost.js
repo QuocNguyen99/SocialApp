@@ -144,7 +144,6 @@ function ItemPost({ item, idUser }) {
                 { text: 'Cancel' }
             ])
         },
-
         {
             title: 'Cancel',
             icon: 'ban',

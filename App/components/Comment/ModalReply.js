@@ -36,7 +36,6 @@ function ModalReply({ item, closeModal, idUser }) {
     const styleInput = {
         height: heightInput
     }
-    console.log('IdPOST', item._id);
     const handleCommentReply = async (idUser, id, idComment, text) => {
         try {
             console.log('1');
