@@ -4,6 +4,7 @@ import ItemUser from '../../components/ItemUser';
 
 import Icon from '../../components/Icon'
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import Title from '../../components/Title'
 
 const listItem = [
     { iconName: 'user', title: 'User Information' },
@@ -19,7 +20,7 @@ export default function ProfileScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.textHeader}>Profile</Text>
+                <Title title='Profile' style={styles.textHeader} />
             </View>
             <View style={styles.itemUserContainer}>
                 <TouchableHighlight
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     textHeader: {
         marginLeft: 20,
         color: 'white',
-        fontSize: 20,
+        fontSize: 22,
         fontFamily: 'Roboto-Bold'
     }
 
