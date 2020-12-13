@@ -54,6 +54,22 @@ const postApi = {
             console.log('err', error.message);
         }
     },
+    listPostByIdUser: (id) => {
+        try {
+            const url = ENDPOINT.GET_LIST_POST_BY_ID_USER;
+            console.log(id);
+            return axiosClient.get(
+                url,
+                {
+                    params: {
+                        idUser: id
+                    }
+                }
+            )
+        } catch (error) {
+            console.log('err', error.message);
+        }
+    },
     updatePost: (idPost, post, token) => {
         try {
             const url = ENDPOINT.UPDATE_POST;

@@ -1,12 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Image, View, TouchableOpacity, Dimensions, TouchableHighlight } from 'react-native';
 
+import postApi from '../../api/postApi';
 import Avata from '../Post/Avata';
 import Title from '../Title'
 
 const { width, height } = Dimensions.get('screen');
 
 export default function ProfileDetail({ navigation }) {
+    const [posts, setPosts] = useState([])
+    useEffect(() => {
+        listPost('5fbb6416cad4ec31e8b4641c')
+    }, [])
+
+    const listPost = async (id) => {
+        try {
+            const { error, data } = await postApi.listPostByIdUser(id);
+            if (!error) {
+                setPosts([...data])
+            }
+        } catch (error) {
+            console.log('Error', error.message);
+        }
+
+    }
     return (
         <View style={styles.container} >
             <View style={styles.headerContainer}>

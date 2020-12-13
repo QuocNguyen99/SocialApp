@@ -3,6 +3,7 @@ const ENDPOINT = {
     LOGIN: '/auth',
     CREATE_POST: '/posts',
     GET_LIST_POST: '/posts/:page',
+    GET_LIST_POST_BY_ID_USER: '/posts/list/:id',
     DELETE_POST: '/posts/:id',
     GET_POST_BY_ID: '/posts/getpostbyid/:id',
     UPDATE_POST: '/posts/:id',
