@@ -11,7 +11,7 @@ function ItemInput({ onPress, imageUser }) {
     const closeModal = () => {
         setVisiable(false);
     }
-
+    console.log('11', imageUser);
     const openModal = () => {
         setVisiable(true);
     }

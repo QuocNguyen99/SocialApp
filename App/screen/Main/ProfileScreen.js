@@ -1,7 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native';
-import ItemUser from '../../components/ItemUser';
+import { connect } from 'react-redux'
 
+import ItemUser from '../../components/ItemUser';
 import Icon from '../../components/Icon'
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import Title from '../../components/Title'
@@ -12,11 +13,8 @@ const listItem = [
     { iconName: 'sign-out', title: 'Log Out' }
 ]
 
-export default function ProfileScreen({ navigation }) {
-    const item = {
-        displayName: 'Huỳnh Quốc Nguyên',
-        image: 'https://res.cloudinary.com/dp2rat4ch/image/upload/v1606648718/xqwgsggu99l0uvod18te.jpg'
-    }
+function ProfileScreen({ navigation, infoUser }) {
+
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
@@ -26,9 +24,9 @@ export default function ProfileScreen({ navigation }) {
                 <TouchableHighlight
                     style={{ paddingVertical: 5 }}
                     underlayColor='lightgray'
-                    onPress={() => navigation.navigate('ProfileDetail')}
+                    onPress={() => navigation.navigate('ProfileDetail', { item: infoUser })}
                 >
-                    <ItemUser item={item} isProfile={true} styleText={styles.styleText} />
+                    <ItemUser item={infoUser} isProfile={true} styleText={styles.styleText} />
                 </TouchableHighlight>
             </View>
 
@@ -50,6 +48,14 @@ export default function ProfileScreen({ navigation }) {
         </View >
     )
 }
+function mapStateToProps(state) {
+    return {
+        infoUser: state.user.infoUser
+    }
+}
+
+export default connect(mapStateToProps)(ProfileScreen)
+
 
 const styles = StyleSheet.create({
     container: {

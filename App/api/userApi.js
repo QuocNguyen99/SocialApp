@@ -37,6 +37,21 @@ const userApi = {
         } catch (error) {
             console.log('Error', error.message);
         }
+    },
+    getInfoUser: (id) => {
+        try {
+            const url = ENDPOINT.GET_USER;
+            return axiosClient.get(
+                url,
+                {
+                    params: {
+                        idUser: id
+                    }
+                },
+            )
+        } catch (error) {
+            console.log('Error', error.message);
+        }
     }
 }
 

@@ -32,12 +32,6 @@ function MainStack({ infoUser, handleSaveInfo }) {
         </View>
     )
 
-    const Profile = () => (
-        <View style={{ flex: 1 }}>
-            <Text>Profile</Text>
-        </View>
-    )
-
     return (
         <View style={styles.container}>
             <View style={styles.containerBody}>
