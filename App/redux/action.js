@@ -4,3 +4,9 @@ export function saveUser(info) {
         payload: info
     })
 }
+
+export function removeUser() {
+    return ({
+        type: 'REMOVE_INFO',
+    })
+}

@@ -25,6 +25,8 @@ const StackNavigator = ({ token }) => (
         <>
           <Stack.Screen name='MainScreen' component={MainStack} />
           <Stack.Screen name='ProfileDetail' component={ProfileDetail} />
+          <Stack.Screen name='LoginScreen' component={LoginScreen} />
+          <Stack.Screen name='RegisterScreen' component={RegisterScreen} />
         </>
       ) :
       (<>

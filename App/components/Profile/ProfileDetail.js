@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Image, View, TouchableOpacity, Dimensions, TouchableHighlight, ScrollView } from 'react-native';
+import { StyleSheet, Image, View, TouchableOpacity, Dimensions, TouchableHighlight, Text, ScrollView, RefreshControl } from 'react-native';
+import { connect } from 'react-redux';
 
 import postApi from '../../api/postApi';
 import Avata from '../Post/Avata';
@@ -10,13 +11,17 @@ import userApi from '../../api/userApi';
 
 const { width, height } = Dimensions.get('screen');
 
-export default function ProfileDetail({ navigation, route }) {
+function ProfileDetail({ navigation, route, idUserRedux }) {
     const [posts, setPosts] = useState([]);
-    const [user, setUser] = useState();
-    const item = route.params.item
+    const [user, setUser] = useState({});
+    const [refreshing, setRefreshing] = useState(false)
+    const idUser = route.params.idUser;
     useEffect(() => {
-        listPost(item._id);
-        getUser(item._id)
+        listPost(idUser);
+    }, [])
+
+    useEffect(() => {
+        getUser(idUser)
     }, [])
     const listPost = async (id) => {
         try {
@@ -29,15 +34,26 @@ export default function ProfileDetail({ navigation, route }) {
         }
     }
     const getUser = async (id) => {
+
         try {
             const { error, data } = await userApi.getInfoUser(id);
             if (!error) {
+                console.log('Data', data.imageCover);
                 setUser(data)
             }
         } catch (error) {
             console.log('User', error.message);
         }
     }
+
+    const handleRefresh = async () => {
+        if (!refreshing) {
+            setRefreshing(true)
+            await listPost(idUser);
+            setRefreshing(false)
+        }
+    }
+
     return (
         <View style={styles.container} >
             <View style={styles.headerContainer}>
@@ -50,13 +66,16 @@ export default function ProfileDetail({ navigation, route }) {
                 </TouchableOpacity>
                 <Title title='Profile Detail' style={{ color: 'white', fontFamily: 'Roboto-Bold' }} />
             </View>
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
+            >
                 <View style={styles.bodyContainer}>
                     <TouchableHighlight
-                        // style={{ height: '25%' }}
                         underlayColor='blue'
                         onPress={() => alert('1')}>
-                        <Image source={require('../../../assets/imagecover.png')} style={{ width: width, height: height / 4 }} resizeMode='cover' />
+                        <Image source={{ uri: user.imageCover }} style={{ width: width, height: height / 4 }} resizeMode='cover' />
                     </TouchableHighlight>
                     <View style={styles.avataContainer}>
                         <TouchableHighlight
@@ -66,37 +85,90 @@ export default function ProfileDetail({ navigation, route }) {
                         </TouchableHighlight>
                     </View>
                     <Title title={user.displayName} style={{ alignSelf: 'center', marginTop: 10, fontFamily: 'Roboto-Medium' }} />
-                    <Title title='Mobile developer' style={{ alignSelf: 'center', marginTop: 5, fontSize: 16, marginBottom: 10 }} />
+                    {
+                        user.bio ? <Title title={user.bio} style={{ alignSelf: 'center', marginTop: 5, fontSize: 16, marginBottom: 10, width: width / 2 }} />
+                            : null
+                    }
 
-                    <View style={{ flexDirection: 'row', padding: 10, borderBottomColor: 'lightgray', borderBottomWidth: 1 }}>
-                        <Image source={require('../../../assets/icon/cake.png')} />
-                        <Title title={`Birthday 21/10/1999 `} style={{ marginTop: 5, marginLeft: 5, fontSize: 16 }} />
-                    </View>
+                    {
+                        user.birthday ?
+                            <View style={styles.textInforContainer}>
+                                <Image source={require('../../../assets/icon/cake.png')} />
+                                <Title title={user.birthday} style={styles.textInforUser} />
+                            </View>
+                            :
+                            <View style={styles.textInforContainer}>
+                                <Image source={require('../../../assets/icon/cake.png')} />
+                                <Title title={`Your friend don't display`} style={styles.textInforUser} />
+                            </View>
+                    }
 
-                    <View style={{ flexDirection: 'row', padding: 10, borderBottomColor: 'lightgray', borderBottomWidth: 1 }}>
-                        <Image source={require('../../../assets/icon/work.png')} />
-                        <Title title={`Work At Fpt Software`} style={{ marginTop: 5, marginLeft: 5, fontSize: 16 }} />
-                    </View>
+                    {
+                        user.workAt ?
+                            <View style={styles.textInforContainer}>
+                                <Image source={require('../../../assets/icon/work.png')} />
+                                <Title title={`Work At ${user.workAt}`} style={styles.textInforUser} />
+                            </View> :
+                            <View style={styles.textInforContainer}>
+                                <Image source={require('../../../assets/icon/work.png')} />
+                                <Title title={`Your friend don't display`} style={styles.textInforUser} />
+                            </View>
+                    }
 
-                    <View style={{ flexDirection: 'row', padding: 10, borderBottomColor: 'lightgray', borderBottomWidth: 1 }}>
-                        <Image source={require('../../../assets/icon/work.png')} />
-                        <Title title={`Study At Fpt Software`} style={{ marginTop: 5, marginLeft: 5, fontSize: 16 }} />
-                    </View>
+                    {
+                        user.studyAt ?
+                            <View style={styles.textInforContainer}>
+                                <Image source={require('../../../assets/icon/study.png')} />
+                                <Title title={`Study At ${user.studyAt}`} style={styles.textInforUser} />
+                            </View> :
+                            <View style={styles.textInforContainer}>
+                                <Image source={require('../../../assets/icon/study.png')} />
+                                <Title title={`Your friend don't display`} style={styles.textInforUser} />
+                            </View>
+                    }
 
-                    <View style={{ backgroundColor: 'white', marginTop: 10 }}>
+                    {
+                        idUser == idUserRedux ?
+                            <View style={{
+                                marginVertical: 10, alignItems: 'center'
+                            }}>
+                                < TouchableHighlight
+                                    style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
+                                    underlayColor='deepskyblue'
+                                    onPress={() => alert('Edit')}
+                                >
+                                    <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>Edit Profile</Text>
+                                </TouchableHighlight>
+                            </View>
+                            : null
+                    }
+
+
+                    <View style={{ backgroundColor: 'white', marginVertical: 10 }}>
                         <Title title='Post' style={{ fontSize: 20, fontFamily: 'Roboto-Bold', marginVertical: 5, marginLeft: 20 }} />
                         <ItemInput />
                     </View>
                     {
-                        posts.map((e, i) => (
-                            <ItemPost key={i} item={e} />
-                        ))
+                        posts.length == 0 ?
+                            <Text style={{ alignSelf: 'center', marginTop: 20 }}>Don't have post to display</Text>
+                            : posts.map((e, i) => (
+                                <ItemPost key={i} item={e} />
+                            ))
                     }
                 </View>
-            </ScrollView>
+            </ScrollView >
         </View >
     )
 }
+
+function mapStateToProps(state) {
+    return {
+        idUserRedux: state.user.infoUser._id
+    }
+}
+
+export default connect(mapStateToProps)(ProfileDetail)
+
 
 const styles = StyleSheet.create({
     container: {
@@ -110,6 +182,13 @@ const styles = StyleSheet.create({
         borderBottomColor: 'lightgray',
         borderBottomWidth: 1,
         backgroundColor: '#1E90FF'
+    },
+    textInforContainer: {
+        flexDirection: 'row',
+        padding: 10,
+        borderBottomColor: 'lightgray',
+        borderBottomWidth: 1,
+        alignItems: 'center'
     },
     bodyContainer: {
         flex: 1
@@ -134,4 +213,8 @@ const styles = StyleSheet.create({
         padding: 5,
         marginLeft: 5
     },
+    textInforUser: {
+        marginLeft: 10,
+        fontSize: 16
+    }
 })

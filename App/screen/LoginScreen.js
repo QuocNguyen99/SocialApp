@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required().min(6).label('Password')
 })
 
-function LoginScreen({ navigation, handleSaveInfo }) {
+function LoginScreen({ navigation, handleSaveInfo, infoUser }) {
     const loginUser = async (value) => {
         try {
             const { error, data } = await userApi.login(value);
@@ -28,7 +28,7 @@ function LoginScreen({ navigation, handleSaveInfo }) {
             Alert.alert('Error', error.message);
         }
     }
-
+    console.log('Login', infoUser);
     return (
         <ImageBackground
             source={require('../../assets/bg.png')}
@@ -75,12 +75,18 @@ function LoginScreen({ navigation, handleSaveInfo }) {
     )
 }
 
+function mapStateToProps(state) {
+    return {
+        infoUser: state.user.infoUser
+    }
+}
+
 function mapDispatchToProps(dispatch) {
     return {
         handleSaveInfo: (info) => dispatch(saveUser(info))
     }
 }
-export default connect(null, mapDispatchToProps)(LoginScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)
 
 const styles = StyleSheet.create({
     button: {

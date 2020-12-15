@@ -1,25 +1,44 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { createStackNavigator } from '@react-navigation/stack';
+
 
 import Icon from '../../components/Icon';
 import HomeScreen from '../Main/HomeScreen';
 import SearchScreen from '../Main/SearchScreen';
 import ProfileScreen from './ProfileScreen';
+import ProfileDetail from '../../components/Profile/ProfileDetail'
 import authStorage from '../../auth/storage'
 import { saveUser } from '../../redux/action';
+import LoginScreen from '../LoginScreen';
+import RegisterScreen from '../RegisterScreen';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator()
+
+const Profile = () => (
+    <Stack.Navigator
+        screenOptions={{
+            headerShown: false
+        }}>
+
+        <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
+        <Stack.Screen name='ProfileDetail' component={ProfileDetail} />
+    </Stack.Navigator>
+)
 
 function MainStack({ infoUser, handleSaveInfo }) {
-
+    const [saveUser, setSaveUser] = useState(false);
     useEffect(() => {
         let mount = true
         handleDispatchInfo(mount)
     }, [])
 
     const handleDispatchInfo = async (mount) => {
+        // console.log();
+        console.log('Infor', infoUser);
         if (Object.keys(infoUser).length === 0 && mount == true) {
             const user = await authStorage.getUser();
             handleSaveInfo(user);
@@ -42,7 +61,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         showLabel: false,
                         indicatorStyle: {
                             backgroundColor: 'dodgerblue'
-                        }
+                        },
                     }}>
                     <Tab.Screen
                         name="Home"
@@ -72,7 +91,7 @@ function MainStack({ infoUser, handleSaveInfo }) {
                         }} />
                     <Tab.Screen
                         name="Profile"
-                        component={ProfileScreen}
+                        component={Profile}
                         options={{
                             tabBarIcon: ({ color }) => (
                                 <Icon name='user-circle-o' size={30} color={color} />

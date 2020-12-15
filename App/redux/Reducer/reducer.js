@@ -9,6 +9,11 @@ const userReducer = (state = initValue, action) => {
                 ...state,
                 infoUser: action.payload
             }
+        case 'REMOVE_INFO':
+            return {
+                ...state,
+                infoUser: {}
+            }
         default:
             break;
     }
