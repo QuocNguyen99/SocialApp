@@ -15,5 +15,6 @@ const ENDPOINT = {
     CREATE_COMMENT_BY_ID: '/comment/:id',
     CREATE_REPLY_BY_IDCOMMENT: '/comment/reply/:id',
     SEARCH_POST_USER: '/posts/search/:content',
+    CHANGE_INFO_USER: '/user/:id'
 }
 export default ENDPOINT;

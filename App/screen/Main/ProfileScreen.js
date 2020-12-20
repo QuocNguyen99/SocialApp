@@ -1,76 +1,129 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native';
-import { connect } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, Image, RefreshControl, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
 
 import ItemUser from '../../components/ItemUser';
-import Icon from '../../components/Icon'
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import Title from '../../components/Title';
 import authStorage from '../../auth/storage'
 import { removeUser } from '../../redux/action';
+import userApi from '../../api/userApi';
 
 const listItem = [
     {
-        iconName: 'user', title: 'User Information', onPress: () => {
+        iconName: require('../../../assets/icon/pencil.png'),
+        title: 'Edit Profile',
+        onPress: async (navigation) => {
+            navigation.navigate('ProfileEdit')
+        }
+    },
+    {
+        iconName: require('../../../assets/icon/darkmode.png'),
+        title: 'Change Dark Theme',
+        onPress: () => {
             alert('1')
         }
     },
     {
-        iconName: 'pencil', title: 'Edit Profile', onPress: () => {
+        iconName: require('../../../assets/icon/global.png'),
+        title: 'Change Language',
+        onPress: () => {
             alert('1')
         }
     },
     {
-        iconName: 'sign-out', title: 'Log Out', onPress: async (navigation, removeInforUser) => {
+        iconName: require('../../../assets/icon/sign-out.png'),
+        title: 'Log Out',
+        onPress: async (navigation, removeInforUser) => {
             removeInforUser();
             await authStorage.removeToken();
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: 'LoginScreen' },
+                    ],
+                })
+            );
             navigation.navigate('LoginScreen')
         }
     }
 ]
 
-function ProfileScreen({ navigation, infoUser, removeInforUser }) {
+function ProfileScreen({ navigation, idUser, removeInforUser }) {
+    const [user, setUser] = useState({});
+    const [refreshing, setRefreshing] = useState(false)
+    useEffect(() => {
+        getUser(idUser);
+    }, [])
+
+    const getUser = async (idUser) => {
+        try {
+            const { error, data } = await userApi.getInfoUser(idUser);
+            if (!error) {
+                setUser(data);
+            }
+        } catch (error) {
+            console.log('Get user', error.message);
+        }
+    }
+
+    const handleRefresh = async () => {
+        if (!refreshing) {
+            setRefreshing(true)
+            await getUser(idUser);
+            setRefreshing(false)
+        }
+    }
+
 
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
                 <Title title='Profile' style={styles.textHeader} />
             </View>
-            <View style={styles.itemUserContainer}>
-                <TouchableHighlight
-                    style={{ paddingVertical: 5 }}
-                    underlayColor='lightgray'
-                    onPress={() => navigation.navigate('ProfileDetail', { idUser: infoUser._id })}
-                >
-                    <ItemUser item={infoUser} isProfile={true} styleText={styles.styleText} />
-                </TouchableHighlight>
-            </View>
-
-            {
-                listItem.map((e, i) => (
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
+            >
+                <View style={styles.itemUserContainer} >
                     <TouchableHighlight
-                        key={i}
+                        style={{ paddingVertical: 5 }}
                         underlayColor='lightgray'
-                        onPress={() => {
-                            if (e.title == 'Log Out')
-                                return e.onPress(navigation, removeInforUser);
-                            else e.onPress();
-                        }}
+                        onPress={() => navigation.navigate('ProfileDetail', { idUser: idUser })}
                     >
-                        <View style={styles.itemContainer}>
-                            <Icon name={e.iconName} />
-                            <Text style={{ marginLeft: 10, fontSize: 18 }}>{e.title}</Text>
-                        </View>
+                        <ItemUser item={user} isProfile={true} styleText={styles.styleText} />
                     </TouchableHighlight>
-                ))
-            }
+                </View>
+
+                {
+                    listItem.map((e, i) => (
+                        <TouchableHighlight
+                            key={i}
+                            underlayColor='lightgray'
+                            onPress={() => {
+                                if (e.title == 'Log Out')
+                                    return e.onPress(navigation, removeInforUser);
+                                else e.onPress(navigation);
+                            }}
+                        >
+                            <View style={styles.itemContainer}>
+                                <Image source={e.iconName} style={{ width: 20, height: 20 }} />
+                                <Text style={{ marginLeft: 10, fontSize: 18 }}>{e.title}</Text>
+                            </View>
+                        </TouchableHighlight>
+                    ))
+                }
+            </ScrollView>
 
         </View >
     )
 }
 function mapStateToProps(state) {
     return {
-        infoUser: state.user.infoUser
+        idUser: state.user.infoUser._id
     }
 }
 function mapDispatchToProps(dispatch) {

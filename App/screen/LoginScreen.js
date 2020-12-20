@@ -2,7 +2,8 @@ import React from 'react';
 import { ImageBackground, StyleSheet, Text, View, Alert } from 'react-native';
 import FormField from '../components/Form/FormField'
 import * as Yup from 'yup';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
 
 import ButtonSubmit from '../components/Form/ButtonSubmit'
 import TextTouch from '../components/TextTouch'
@@ -23,6 +24,14 @@ function LoginScreen({ navigation, handleSaveInfo, infoUser }) {
             if (error) return Alert.alert('Notification', 'Have problem');
             await authStorage.storeToken(data.token)
             handleSaveInfo(data.user);
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: 'MainScreen' },
+                    ],
+                })
+            );
             navigation.navigate('MainScreen')
         } catch (error) {
             Alert.alert('Error', error.message);

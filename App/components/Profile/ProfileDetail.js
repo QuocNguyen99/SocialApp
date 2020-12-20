@@ -50,6 +50,7 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
         if (!refreshing) {
             setRefreshing(true)
             await listPost(idUser);
+            await getUser(idUser);
             setRefreshing(false)
         }
     }
@@ -86,15 +87,18 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                     </View>
                     <Title title={user.displayName} style={{ alignSelf: 'center', marginTop: 10, fontFamily: 'Roboto-Medium' }} />
                     {
-                        user.bio ? <Title title={user.bio} style={{ alignSelf: 'center', marginTop: 5, fontSize: 16, marginBottom: 10, width: width / 2 }} />
+                        user.bio ?
+                            <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: width / 4 }}>
+                                <Title title={user.bio} style={{ alignSelf: 'center', marginTop: 10, fontFamily: 'Roboto-Regular', fontSize: 16 }} />
+                            </View>
                             : null
                     }
 
                     {
-                        user.birthday ?
+                        user.birthDay ?
                             <View style={styles.textInforContainer}>
                                 <Image source={require('../../../assets/icon/cake.png')} />
-                                <Title title={user.birthday} style={styles.textInforUser} />
+                                <Title title={user.birthDay} style={styles.textInforUser} />
                             </View>
                             :
                             <View style={styles.textInforContainer}>
@@ -135,7 +139,7 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                                 < TouchableHighlight
                                     style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
                                     underlayColor='deepskyblue'
-                                    onPress={() => alert('Edit')}
+                                    onPress={() => navigation.navigate('ProfileEdit')}
                                 >
                                     <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>Edit Profile</Text>
                                 </TouchableHighlight>
@@ -210,8 +214,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     icon: {
-        padding: 5,
-        marginLeft: 5
+        padding: 5
     },
     textInforUser: {
         marginLeft: 10,

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, View, StyleSheet, ActivityIndicator, RefreshControl } from 'react-native';
+import { FlatList, View, StyleSheet } from 'react-native';
 
 import ItemPost from './ItemPost';
 import postApi from '../../api/postApi'

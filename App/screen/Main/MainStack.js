@@ -9,7 +9,8 @@ import Icon from '../../components/Icon';
 import HomeScreen from '../Main/HomeScreen';
 import SearchScreen from '../Main/SearchScreen';
 import ProfileScreen from './ProfileScreen';
-import ProfileDetail from '../../components/Profile/ProfileDetail'
+import ProfileDetail from '../../components/Profile/ProfileDetail';
+import ProfileEdit from '../../components/Profile/ProfileEdit'
 import authStorage from '../../auth/storage'
 import { saveUser } from '../../redux/action';
 import LoginScreen from '../LoginScreen';
@@ -23,9 +24,10 @@ const Profile = () => (
         screenOptions={{
             headerShown: false
         }}>
-
         <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
         <Stack.Screen name='ProfileDetail' component={ProfileDetail} />
+        <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
+
     </Stack.Navigator>
 )
 

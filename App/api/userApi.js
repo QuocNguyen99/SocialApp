@@ -52,6 +52,27 @@ const userApi = {
         } catch (error) {
             console.log('Error', error.message);
         }
+    },
+    changeInforUser: (id, userUpdate, token) => {
+        try {
+            const url = ENDPOINT.CHANGE_INFO_USER;
+            return axiosClient.put(
+                url,
+                {
+                    userUpdate: userUpdate
+                },
+                {
+                    headers: {
+                        'token': token
+                    },
+                    params: {
+                        idUser: id
+                    }
+                },
+            )
+        } catch (error) {
+            console.log('Error', error.message);
+        }
     }
 }
 

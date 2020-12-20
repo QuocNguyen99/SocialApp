@@ -23,6 +23,8 @@ target 'SocialApp' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   post_install do |installer|
     flipper_post_install(installer)
   end
