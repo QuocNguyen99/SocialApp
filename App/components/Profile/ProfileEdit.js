@@ -96,7 +96,6 @@ function ProfileEdit({ navigation, idUser }) {
 
     const sumbitEdit = async (id, userUpdate) => {
         try {
-            console.log(userUpdate);
             const token = await storage.getToken();
             const { error } = await userApi.changeInforUser(id, userUpdate, token);
             if (!error) {
@@ -118,6 +117,15 @@ function ProfileEdit({ navigation, idUser }) {
             }
         } catch (error) {
             console.log('User', error.message);
+        }
+    }
+
+    const updateAvata = async (id, avataUpdate, avataCurrent) => {
+        try {
+            const token = await storage.getToken();
+            const { error } = await userApi.changeAvataUser(id, avataUpdate, avataCurrent, token);
+        } catch (error) {
+            console.log();
         }
     }
 
@@ -155,6 +163,14 @@ function ProfileEdit({ navigation, idUser }) {
                                 <Image source={require('../../../assets/icon/cancel-2.png')} style={{ width: 20, height: 20 }} />
                             </TouchableOpacity>
                         </View>
+                        {//Demo Update avata}
+                        }
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={() => updateAvata(idUser, avataTemp, user.image)}
+                        >
+                            <Image source={require('../../../assets/icon/cancel-2.png')} style={{ width: 20, height: 20 }} />
+                        </TouchableOpacity>
 
                         <Button
                             buttonStyle={{ width: 150 }}

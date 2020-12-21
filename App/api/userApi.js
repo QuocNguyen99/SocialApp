@@ -73,6 +73,28 @@ const userApi = {
         } catch (error) {
             console.log('Error', error.message);
         }
+    },
+    changeAvataUser: (id, avataUpdate, avataCurrent, token) => {
+        try {
+            const url = ENDPOINT.CHANGE_AVATA_USER;
+            return axiosClient.put(
+                url,
+                {
+                    avataUpdate: avataUpdate,
+                    avataCurrent: avataCurrent
+                },
+                {
+                    headers: {
+                        'token': token
+                    },
+                    params: {
+                        idUser: id
+                    }
+                },
+            )
+        } catch (error) {
+            console.log('Error', error.message);
+        }
     }
 }
 
