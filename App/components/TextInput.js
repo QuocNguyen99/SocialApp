@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View, TextInput } from 'react-native';
 
 export default function AppTextInput({ style, stylesContainer, ...otherProps }) {
-    console.log('Render');
+
     return (
         <View style={[styles.container, stylesContainer]}>
             <TextInput style={[styles.textInput, style]} {...otherProps} />

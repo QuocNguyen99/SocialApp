@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         alignItems: 'center',
         paddingHorizontal: 15,
-        borderBottomWidth: 1,
+        borderBottomWidth: 2,
         borderBottomColor: 'lightgray'
     },
     textHeader: {

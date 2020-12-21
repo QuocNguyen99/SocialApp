@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, TouchableOpacity, Image, Platform, Button, Dimensions } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, Platform, Dimensions, Alert, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment'
+import moment from 'moment';
+import { Button } from 'react-native-elements';
+import ImagePicker from 'react-native-image-picker';
 
 import Title from '../../components/Title';
 import FormField from '../Form/FormField';
@@ -10,12 +12,14 @@ import ButtonSubmit from '../Form/ButtonSubmit';
 import userApi from '../../api/userApi'
 import { connect } from 'react-redux';
 import storage from '../../auth/storage';
-import { Alert } from 'react-native';
+import Avata from '../Post/Avata';
 
 const { width } = Dimensions.get('screen')
 
 function ProfileEdit({ navigation, idUser }) {
     const [user, setUser] = useState({});
+    const [avataTemp, setAvataTemp] = useState(null);
+    const [imageCoverTemp, setImageCoverTemp] = useState(null);
     const [date, setDate] = useState(new Date(1598051730000));
     const [show, setShow] = useState(false);
 
@@ -37,6 +41,58 @@ function ProfileEdit({ navigation, idUser }) {
 
     };
 
+    const options = {
+        title: 'Choose Image',
+        storageOptions: {
+            skipBackup: true,
+            path: 'images',
+        },
+        saveToPhotos: true,
+        quality: 0.5
+    };
+
+    const openLibary = (type) => {
+        return ImagePicker.launchImageLibrary(options, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                const source = `data:image/png;base64,${response.data}`
+                if (type == 'avata') {
+                    setAvataTemp(source);
+                }
+                else {
+                    setImageCoverTemp(source)
+                }
+            }
+        });
+    }
+
+    const editAvata = (type) => {
+        openLibary(type);
+    }
+    const editImageCover = (type) => {
+        openLibary(type);
+    }
+
+    const removeAvataEdit = () => {
+        if (!avataTemp) {
+            setUser({ ...user, image: 'https://res.cloudinary.com/dp2rat4ch/image/upload/v1608031982/avataDefault_obmgcb.gif' })
+        } else {
+            setAvataTemp('');
+        }
+    }
+
+    const removeImageCoverEdit = () => {
+        if (!imageCoverTemp) {
+            setUser({ ...user, imageCover: 'https://res.cloudinary.com/dp2rat4ch/image/upload/v1608033503/imagecover_fd4dcs.png' })
+        } else {
+            setImageCoverTemp('');
+        }
+    }
 
     const sumbitEdit = async (id, userUpdate) => {
         try {
@@ -76,104 +132,143 @@ function ProfileEdit({ navigation, idUser }) {
                 </TouchableOpacity>
                 <Title title='Profile Edit' style={{ color: 'white', fontFamily: 'Roboto-Bold' }} />
             </View>
-            <View style={styles.bodyContainer}>
-                {show && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={date}
-                        mode='date'
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChange}
-                    />
-                )}
-                <FormField
-                    initialValues={{ displayName: '', bio: '', birthDay: '', studyAt: '', workAt: '' }}
-                    onSubmit={() => sumbitEdit(idUser, user)}
-                >
-                    {/* <TextInput
+            <ScrollView>
+                <View style={styles.bodyContainer}>
+                    {show && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={date}
+                            mode='date'
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChange}
+                        />
+                    )}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 10 }}>
+                        <View>
+                            <Avata image={avataTemp ? avataTemp : user.image} styleImage={{ width: 100, height: 100, borderRadius: 50 }} />
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                style={{ position: 'absolute', top: 0, right: 0 }}
+                                onPress={() => removeAvataEdit()}
+                            >
+                                <Image source={require('../../../assets/icon/cancel-2.png')} style={{ width: 20, height: 20 }} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <Button
+                            buttonStyle={{ width: 150 }}
+                            title="Edit Avata"
+                            onPress={() => editAvata('avata')}
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, marginBottom: 20 }}>
+                        <View>
+                            <Image source={{ uri: imageCoverTemp ? imageCoverTemp : user.imageCover }} style={{ width: 100, height: 100 }} />
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                style={{ position: 'absolute', top: 0, right: 0 }}
+                                onPress={() => removeImageCoverEdit()}
+                            >
+                                <Image source={require('../../../assets/icon/cancel-2.png')} style={{ width: 20, height: 20 }} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <Button
+                            buttonStyle={{ width: 150 }}
+                            title="Edit Cover Image"
+                            onPress={() => editImageCover('imageCover')}
+                        />
+                    </View>
+
+                    <FormField
+                        initialValues={{ displayName: '', bio: '', birthDay: '', studyAt: '', workAt: '' }}
+                        onSubmit={() => sumbitEdit(idUser, user)}
+                    >
+                        {/* <TextInput
                         value={user.bio}
                         onChangeText={() => console.log(0)}
                     /> */}
-                    <TextInputField
-                        value={user.bio}
-                        autoCapitalize='none'
-                        styleTitle={styles.textSubTitle}
-                        name='bio'
-                        title='Bio'
-                        multiline
-                        handleChangeState={(text) => setUser({
-                            ...user,
-                            bio: text
-                        })}
-                    />
-
-                    <TextInputField
-                        value={user.displayName}
-                        autoCapitalize='none'
-                        styleTitle={styles.textSubTitle}
-                        name='displayName'
-                        title='Full Name'
-                        multiline
-                        handleChangeState={(text) => setUser({
-                            ...user,
-                            displayName: text
-                        })}
-                    />
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <TextInputField
-                            value={user.birthDay ? user.birthDay : moment(date).format('Do MMMM YYYY')}
+                            value={user.bio}
                             autoCapitalize='none'
                             styleTitle={styles.textSubTitle}
-                            name='birthday'
-                            title='Birthday'
+                            name='bio'
+                            title='Bio'
                             multiline
-                            editable={false}
-                            style={{ width: width / 2 }}
-                        />
-                        <TouchableOpacity
-                            onPress={showDatepicker}
-                        >
-                            <Image source={require('../../../assets/icon/calendar.png')} style={{ width: 30, height: 30 }} />
-                        </TouchableOpacity>
-                    </View>
-
-
-                    <TextInputField
-                        value={user.studyAt}
-                        autoCapitalize='none'
-                        styleTitle={styles.textSubTitle}
-                        name='studyAt'
-                        title='Study at'
-                        multiline
-                        handleChangeState={(text) => setUser({
-                            ...user,
-                            studyAt: text
-                        })}
-                    />
-
-                    <TextInputField
-                        value={user.workAt}
-                        autoCapitalize='none'
-                        styleTitle={styles.textSubTitle}
-                        name='workAt'
-                        title='Work at'
-                        multiline
-                        handleChangeState={(text) => setUser({
-                            ...user,
-                            workAt: text
-                        })}
-                    />
-                    <View style={styles.containerButton}>
-                        <ButtonSubmit
-                            title='SUBMIT'
-                            style={styles.button}
+                            handleChangeState={(text) => setUser({
+                                ...user,
+                                bio: text
+                            })}
                         />
 
-                    </View>
-                </FormField>
-            </View>
+                        <TextInputField
+                            value={user.displayName}
+                            autoCapitalize='none'
+                            styleTitle={styles.textSubTitle}
+                            name='displayName'
+                            title='Full Name'
+                            multiline
+                            handleChangeState={(text) => setUser({
+                                ...user,
+                                displayName: text
+                            })}
+                        />
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TextInputField
+                                value={user.birthDay ? user.birthDay : moment(date).format('Do MMMM YYYY')}
+                                autoCapitalize='none'
+                                styleTitle={styles.textSubTitle}
+                                name='birthday'
+                                title='Birthday'
+                                multiline
+                                editable={false}
+                                style={{ width: width / 2 }}
+                            />
+                            <TouchableOpacity
+                                onPress={showDatepicker}
+                            >
+                                <Image source={require('../../../assets/icon/calendar.png')} style={{ width: 30, height: 30 }} />
+                            </TouchableOpacity>
+                        </View>
 
+
+                        <TextInputField
+                            value={user.studyAt}
+                            autoCapitalize='none'
+                            styleTitle={styles.textSubTitle}
+                            name='studyAt'
+                            title='Study at'
+                            multiline
+                            handleChangeState={(text) => setUser({
+                                ...user,
+                                studyAt: text
+                            })}
+                        />
+
+                        <TextInputField
+                            value={user.workAt}
+                            autoCapitalize='none'
+                            styleTitle={styles.textSubTitle}
+                            name='workAt'
+                            title='Work at'
+                            multiline
+                            handleChangeState={(text) => setUser({
+                                ...user,
+                                workAt: text
+                            })}
+                        />
+                        <View style={styles.containerButton}>
+                            <ButtonSubmit
+                                title='SUBMIT'
+                                style={styles.button}
+                            />
+
+                        </View>
+                    </FormField>
+                </View>
+            </ScrollView>
         </View>
     )
 }
@@ -212,6 +307,7 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     button: {
+        marginTop: 10,
         alignSelf: 'flex-end'
     },
 })
