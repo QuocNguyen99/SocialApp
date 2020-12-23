@@ -76,7 +76,7 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                     <TouchableHighlight
                         underlayColor='blue'
                         onPress={() => alert('1')}>
-                        <Image source={{ uri: user.imageCover }} style={{ width: width, height: height / 4 }} resizeMode='cover' />
+                        <Image source={{ uri: user.imageCover }} style={{ width: '100%', height: height / 4 }} resizeMode='cover' />
                     </TouchableHighlight>
                     <View style={styles.avataContainer}>
                         <TouchableHighlight

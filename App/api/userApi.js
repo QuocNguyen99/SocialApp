@@ -95,6 +95,28 @@ const userApi = {
         } catch (error) {
             console.log('Error', error.message);
         }
+    },
+    changeImageCoverUser: (id, imageCoverUpdate, imageCoverCurrent, token) => {
+        try {
+            const url = ENDPOINT.CHANGE_IMAGE_COVER_USER;
+            return axiosClient.post(
+                url,
+                {
+                    imageCoverUpdate: imageCoverUpdate,
+                    imageCoverCurrent: imageCoverCurrent
+                },
+                {
+                    headers: {
+                        'token': token
+                    },
+                    params: {
+                        idUser: id
+                    }
+                },
+            )
+        } catch (error) {
+            console.log('Error', error.message);
+        }
     }
 }
 

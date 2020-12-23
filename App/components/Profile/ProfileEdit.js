@@ -22,6 +22,11 @@ function ProfileEdit({ navigation, idUser }) {
     const [imageCoverTemp, setImageCoverTemp] = useState(null);
     const [date, setDate] = useState(new Date(1598051730000));
     const [show, setShow] = useState(false);
+    const [showPass, setShowPass] = useState(true);
+    const [showNewPass, setShowNewPass] = useState(true);
+    const [pass, setPass] = useState('');
+    const [newPass, setNewPass] = useState('');
+
 
     useEffect(() => {
         getUser(idUser)
@@ -94,9 +99,11 @@ function ProfileEdit({ navigation, idUser }) {
         }
     }
 
-    const sumbitEdit = async (id, userUpdate) => {
+    const sumbitEdit = async (id, userUpdate, avataTemp, imageCoverTemp) => {
         try {
             const token = await storage.getToken();
+            // await updateAvata(idUser, avataTemp, userUpdate.image);
+            // await updateImageCover(idUser, imageCoverTemp, userUpdate.imageCover)
             const { error } = await userApi.changeInforUser(id, userUpdate, token);
             if (!error) {
                 Alert.alert('Edit Profile', 'Successful', [
@@ -125,8 +132,24 @@ function ProfileEdit({ navigation, idUser }) {
             const token = await storage.getToken();
             const { error } = await userApi.changeAvataUser(id, avataUpdate, avataCurrent, token);
         } catch (error) {
-            console.log();
+            console.log('UpdateAvata', error.message);
         }
+    }
+    const updateImageCover = async (id, imageCoverUpdate, imageCoverCurrent) => {
+        try {
+            const token = await storage.getToken();
+            const { error } = await userApi.changeImageCoverUser(id, imageCoverUpdate, imageCoverCurrent, token);
+        } catch (error) {
+            console.log('UpdateImage', error.message);
+        }
+    }
+
+    const handleShowPass = () => {
+        setShowPass(!showPass)
+    }
+
+    const handleShowNewPass = () => {
+        setShowNewPass(!showNewPass)
     }
 
     return (
@@ -163,14 +186,6 @@ function ProfileEdit({ navigation, idUser }) {
                                 <Image source={require('../../../assets/icon/cancel-2.png')} style={{ width: 20, height: 20 }} />
                             </TouchableOpacity>
                         </View>
-                        {//Demo Update avata}
-                        }
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            onPress={() => updateAvata(idUser, avataTemp, user.image)}
-                        >
-                            <Image source={require('../../../assets/icon/cancel-2.png')} style={{ width: 20, height: 20 }} />
-                        </TouchableOpacity>
 
                         <Button
                             buttonStyle={{ width: 150 }}
@@ -200,12 +215,12 @@ function ProfileEdit({ navigation, idUser }) {
 
                     <FormField
                         initialValues={{ displayName: '', bio: '', birthDay: '', studyAt: '', workAt: '' }}
-                        onSubmit={() => sumbitEdit(idUser, user)}
+                        onSubmit={() => {
+                            sumbitEdit(idUser, user, avataTemp, imageCoverTemp),
+                                updateAvata(idUser, avataTemp, user.image),
+                                updateImageCover(idUser, imageCoverTemp, user.imageCover)
+                        }}
                     >
-                        {/* <TextInput
-                        value={user.bio}
-                        onChangeText={() => console.log(0)}
-                    /> */}
                         <TextInputField
                             value={user.bio}
                             autoCapitalize='none'
@@ -283,6 +298,72 @@ function ProfileEdit({ navigation, idUser }) {
 
                         </View>
                     </FormField>
+
+                    <FormField
+                        initialValues={{ password: '', newPassword: '' }}
+                        onSubmit={(value) => {
+                            alert(pass + "-" + newPass)
+                        }}
+                    >
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TextInputField
+                                autoCapitalize='none'
+                                secureTextEntry={showPass}
+                                style={{ width: width / 1.2 }}
+                                styleTitle={styles.textSubTitle}
+                                name='password'
+                                title='Old Password'
+                                handleChangeState={(text) => setPass(text)}
+                            />
+
+                            <TouchableOpacity
+                                onPress={() => handleShowPass()}
+                            >
+                                {
+                                    showPass ?
+                                        <Image source={require('../../../assets/icon/hiden.png')} style={{ width: 30, height: 30 }} />
+                                        :
+                                        <Image source={require('../../../assets/icon/show.png')} style={{ width: 30, height: 30 }} />
+
+                                }
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TextInputField
+                                autoCapitalize='none'
+                                secureTextEntry={showNewPass}
+                                style={{ width: width / 1.2 }}
+                                styleTitle={styles.textSubTitle}
+                                name='newPassword'
+                                title='New Password'
+                                handleChangeState={(text) => setNewPass(text)}
+                            />
+
+                            <TouchableOpacity
+                                onPress={() => handleShowNewPass()}
+                            >
+                                {
+                                    showNewPass ?
+                                        <Image source={require('../../../assets/icon/hiden.png')} style={{ width: 30, height: 30 }} />
+                                        :
+                                        <Image source={require('../../../assets/icon/show.png')} style={{ width: 30, height: 30 }} />
+
+                                }
+
+
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.containerButton}>
+                            <ButtonSubmit
+                                title='SUBMIT'
+                                style={styles.button}
+                            />
+
+                        </View>
+                    </FormField>
+
                 </View>
             </ScrollView>
         </View>
@@ -321,6 +402,10 @@ const styles = StyleSheet.create({
     textSubTitle: {
         fontFamily: 'Roboto-Medium',
         fontSize: 20
+    },
+    button: {
+        marginTop: 10,
+        alignSelf: 'flex-end'
     },
     button: {
         marginTop: 10,

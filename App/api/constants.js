@@ -16,6 +16,8 @@ const ENDPOINT = {
     CREATE_REPLY_BY_IDCOMMENT: '/comment/reply/:id',
     SEARCH_POST_USER: '/posts/search/:content',
     CHANGE_INFO_USER: '/user/:id',
-    CHANGE_AVATA_USER: '/user/updateAvata/:id'
+    CHANGE_AVATA_USER: '/user/updateAvata/:id',
+    CHANGE_IMAGE_COVER_USER: '/user/updateImageCover/:id'
+
 }
 export default ENDPOINT;
