@@ -13,8 +13,7 @@ import ProfileDetail from '../../components/Profile/ProfileDetail';
 import ProfileEdit from '../../components/Profile/ProfileEdit'
 import authStorage from '../../auth/storage'
 import { saveUser } from '../../redux/action';
-import LoginScreen from '../LoginScreen';
-import RegisterScreen from '../RegisterScreen';
+import ChangePassword from '../../components/Profile/ChangePasswordScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator()
@@ -27,6 +26,7 @@ const Profile = () => (
         <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
         <Stack.Screen name='ProfileDetail' component={ProfileDetail} />
         <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
+        <Stack.Screen name='ProfileEditPassword' component={ChangePassword} />
 
     </Stack.Navigator>
 )

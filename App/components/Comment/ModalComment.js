@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, TouchableHighlight, View, Image, TextInput, TouchableOpacity, ScrollView, Dimensions, FlatList } from 'react-native';
 import { connect } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 import ItemComment from './ItemComment'
 import Title from '../../components/Title';
@@ -73,7 +74,7 @@ function ModalComment({ closeModal, idUser, id }) {
                     data={listComment}
                     keyExtractor={(item) => item._id.toString()}
                     renderItem={({ item }) => (
-                        <ItemComment item={item} />
+                        <ItemComment item={item} closeModal={closeModal} />
                     )}
                 />
 

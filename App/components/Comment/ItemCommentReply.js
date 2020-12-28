@@ -1,20 +1,35 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, Dimensions, TouchableWithoutFeedback, Modal } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import Avata from '../Post/Avata'
 import moment from 'moment';
 
 const { width } = Dimensions.get('screen');
-export default function ItemComment({ item }) {
+export default function ItemComment({ item, closeModal }) {
     let { content, author, createAt } = item;
     createAt = moment(createAt).startOf('minute').fromNow();
+    const navigation = useNavigation();
 
+    const goToDetailsScreen = (id) => {
+        closeModal();
+        navigation.navigate('ProfileDetail', { idUser: id })
+    }
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row' }}>
-                <Avata image={author.image} />
+                <TouchableOpacity
+                    onPress={() => goToDetailsScreen(item.author._id)}
+                >
+                    <Avata image={author.image} />
+                </TouchableOpacity>
                 <View style={styles.bodyContainer}>
-                    <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16 }}>{author.displayName}</Text>
+                    <TouchableOpacity
+                        onPress={() => goToDetailsScreen(item.author._id)}
+                    >
+                        <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16 }}>{author.displayName}</Text>
+                    </TouchableOpacity>
+
                     <Text style={{ fontSize: 16 }}>{content}</Text>
                 </View>
             </View>

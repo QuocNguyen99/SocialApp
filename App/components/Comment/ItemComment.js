@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Dimensions, TouchableWithoutFeedback, Modal, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableWithoutFeedback, Modal, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import Avata from '../Post/Avata'
 import moment from 'moment';
@@ -7,12 +8,13 @@ import ModalReply from './ModalReply'
 import commentApi from '../../api/commentApi';
 
 const { width } = Dimensions.get('screen');
-export default function ItemComment({ item }) {
+export default function ItemComment({ item, closeModal }) {
     const [visiableReply, setVisiableReply] = useState(false);
     const [count, setCount] = useState();
     const [latestComments, setLatestComments] = useState();
     let { content, author, createAt } = item;
     createAt = moment(createAt).startOf('minute').fromNow();
+    const navigation = useNavigation();
 
     useEffect(() => {
         getLengthReply(item._id)
@@ -33,12 +35,25 @@ export default function ItemComment({ item }) {
     const closeModalReply = () => {
         setVisiableReply(false)
     }
+
+    const goToDetailsScreen = (id) => {
+        closeModal();
+        navigation.navigate('ProfileDetail', { idUser: id })
+    }
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row' }}>
-                <Avata image={author.image} />
+                <TouchableOpacity
+                    onPress={() => goToDetailsScreen(item.author._id)}
+                >
+                    <Avata image={author.image} />
+                </TouchableOpacity>
                 <View style={styles.bodyContainer}>
-                    <Text style={styles.displayName}>{author.displayName}</Text>
+                    <TouchableOpacity
+                        onPress={() => goToDetailsScreen(item.author._id)}
+                    >
+                        <Text style={styles.displayName}>{author.displayName}</Text>
+                    </TouchableOpacity>
                     <Text style={{ fontSize: 16 }}>{content}</Text>
                 </View>
             </View>
@@ -76,7 +91,7 @@ export default function ItemComment({ item }) {
                 </View>
             ) : null}
             <Modal visible={visiableReply} animationType='fade'>
-                <ModalReply closeModal={closeModalReply} item={item} isReply={true} />
+                <ModalReply closeModalReply={closeModalReply} closeModal={closeModal} item={item} isReply={true} />
             </Modal>
         </View>
     )

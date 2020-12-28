@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Image, View, TouchableOpacity, Dimensions, TouchableHighlight, Text, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, Image, View, TouchableOpacity, Dimensions, TouchableHighlight, Text, ScrollView, RefreshControl, Modal } from 'react-native';
 import { connect } from 'react-redux';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 import postApi from '../../api/postApi';
 import Avata from '../Post/Avata';
@@ -15,7 +16,10 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
     const [posts, setPosts] = useState([]);
     const [user, setUser] = useState({});
     const [refreshing, setRefreshing] = useState(false)
+    const [visiable, setVisiable] = useState(false)
+    const [imageUrls, setImageUrls] = useState([]);
     const idUser = route.params.idUser;
+    console.log('ID USER', idUser);
     useEffect(() => {
         listPost(idUser);
     }, [])
@@ -23,6 +27,8 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
     useEffect(() => {
         getUser(idUser)
     }, [])
+
+
     const listPost = async (id) => {
         try {
             const { error, data } = await postApi.listPostByIdUser(id);
@@ -34,11 +40,9 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
         }
     }
     const getUser = async (id) => {
-
         try {
             const { error, data } = await userApi.getInfoUser(id);
             if (!error) {
-                console.log('Data', data.imageCover);
                 setUser(data)
             }
         } catch (error) {
@@ -53,6 +57,11 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
             await getUser(idUser);
             setRefreshing(false)
         }
+    }
+
+    const openViewimage = async (image) => {
+        setImageUrls([{ url: image }])
+        setVisiable(true);
     }
 
     return (
@@ -75,13 +84,13 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                 <View style={styles.bodyContainer}>
                     <TouchableHighlight
                         underlayColor='blue'
-                        onPress={() => alert('1')}>
+                        onPress={() => openViewimage(user.imageCover)}>
                         <Image source={{ uri: user.imageCover }} style={{ width: '100%', height: height / 4 }} resizeMode='cover' />
                     </TouchableHighlight>
                     <View style={styles.avataContainer}>
                         <TouchableHighlight
                             underlayColor='gray'
-                            onPress={() => alert('1')}>
+                            onPress={() => openViewimage(user.image)}>
                             <Avata styleImage={styles.avata} image={user.image} />
                         </TouchableHighlight>
                     </View>
@@ -130,7 +139,6 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                                 <Title title={`Your friend don't display`} style={styles.textInforUser} />
                             </View>
                     }
-
                     {
                         idUser == idUserRedux ?
                             <View style={{
@@ -147,11 +155,16 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                             : null
                     }
 
+                    {
+                        idUser == idUserRedux ?
+                            <View style={{ backgroundColor: 'white', marginVertical: 10 }}>
+                                <Title title='Post' style={{ fontSize: 20, fontFamily: 'Roboto-Bold', marginVertical: 5, marginLeft: 20 }} />
+                                <ItemInput />
+                            </View>
+                            :
+                            null
 
-                    <View style={{ backgroundColor: 'white', marginVertical: 10 }}>
-                        <Title title='Post' style={{ fontSize: 20, fontFamily: 'Roboto-Bold', marginVertical: 5, marginLeft: 20 }} />
-                        <ItemInput />
-                    </View>
+                    }
                     {
                         posts.length == 0 ?
                             <Text style={{ alignSelf: 'center', marginTop: 20 }}>Don't have post to display</Text>
@@ -161,6 +174,9 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                     }
                 </View>
             </ScrollView >
+            <Modal visible={visiable} transparent={true}>
+                <ImageViewer imageUrls={imageUrls} enableSwipeDown={true} onCancel={() => setVisiable(false)} />
+            </Modal>
         </View >
     )
 }

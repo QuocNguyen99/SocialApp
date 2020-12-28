@@ -4,13 +4,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { Button } from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
+import { connect } from 'react-redux';
 
 import Title from '../../components/Title';
 import FormField from '../Form/FormField';
 import TextInputField from '../Form/TextInputField';
 import ButtonSubmit from '../Form/ButtonSubmit';
 import userApi from '../../api/userApi'
-import { connect } from 'react-redux';
 import storage from '../../auth/storage';
 import Avata from '../Post/Avata';
 
@@ -22,11 +22,8 @@ function ProfileEdit({ navigation, idUser }) {
     const [imageCoverTemp, setImageCoverTemp] = useState(null);
     const [date, setDate] = useState(new Date(1598051730000));
     const [show, setShow] = useState(false);
-    const [showPass, setShowPass] = useState(true);
-    const [showNewPass, setShowNewPass] = useState(true);
-    const [pass, setPass] = useState('');
-    const [newPass, setNewPass] = useState('');
-
+    console.log(avataTemp);
+    console.log(imageCoverTemp);
 
     useEffect(() => {
         getUser(idUser)
@@ -144,14 +141,6 @@ function ProfileEdit({ navigation, idUser }) {
         }
     }
 
-    const handleShowPass = () => {
-        setShowPass(!showPass)
-    }
-
-    const handleShowNewPass = () => {
-        setShowNewPass(!showNewPass)
-    }
-
     return (
         <View style={styles.container} >
             <View style={styles.headerContainer}>
@@ -263,8 +252,6 @@ function ProfileEdit({ navigation, idUser }) {
                                 <Image source={require('../../../assets/icon/calendar.png')} style={{ width: 30, height: 30 }} />
                             </TouchableOpacity>
                         </View>
-
-
                         <TextInputField
                             value={user.studyAt}
                             autoCapitalize='none'
@@ -277,7 +264,6 @@ function ProfileEdit({ navigation, idUser }) {
                                 studyAt: text
                             })}
                         />
-
                         <TextInputField
                             value={user.workAt}
                             autoCapitalize='none'
@@ -295,75 +281,8 @@ function ProfileEdit({ navigation, idUser }) {
                                 title='SUBMIT'
                                 style={styles.button}
                             />
-
                         </View>
                     </FormField>
-
-                    <FormField
-                        initialValues={{ password: '', newPassword: '' }}
-                        onSubmit={(value) => {
-                            alert(pass + "-" + newPass)
-                        }}
-                    >
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <TextInputField
-                                autoCapitalize='none'
-                                secureTextEntry={showPass}
-                                style={{ width: width / 1.2 }}
-                                styleTitle={styles.textSubTitle}
-                                name='password'
-                                title='Old Password'
-                                handleChangeState={(text) => setPass(text)}
-                            />
-
-                            <TouchableOpacity
-                                onPress={() => handleShowPass()}
-                            >
-                                {
-                                    showPass ?
-                                        <Image source={require('../../../assets/icon/hiden.png')} style={{ width: 30, height: 30 }} />
-                                        :
-                                        <Image source={require('../../../assets/icon/show.png')} style={{ width: 30, height: 30 }} />
-
-                                }
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <TextInputField
-                                autoCapitalize='none'
-                                secureTextEntry={showNewPass}
-                                style={{ width: width / 1.2 }}
-                                styleTitle={styles.textSubTitle}
-                                name='newPassword'
-                                title='New Password'
-                                handleChangeState={(text) => setNewPass(text)}
-                            />
-
-                            <TouchableOpacity
-                                onPress={() => handleShowNewPass()}
-                            >
-                                {
-                                    showNewPass ?
-                                        <Image source={require('../../../assets/icon/hiden.png')} style={{ width: 30, height: 30 }} />
-                                        :
-                                        <Image source={require('../../../assets/icon/show.png')} style={{ width: 30, height: 30 }} />
-
-                                }
-
-
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={styles.containerButton}>
-                            <ButtonSubmit
-                                title='SUBMIT'
-                                style={styles.button}
-                            />
-
-                        </View>
-                    </FormField>
-
                 </View>
             </ScrollView>
         </View>

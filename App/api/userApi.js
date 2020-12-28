@@ -117,6 +117,28 @@ const userApi = {
         } catch (error) {
             console.log('Error', error.message);
         }
+    },
+    changePassword: (id, oldPass, newPass, token) => {
+        try {
+            const url = ENDPOINT.CHANGE_PASSWORD_USER;
+            return axiosClient.post(
+                url,
+                {
+                    oldPass: oldPass,
+                    newPass: newPass
+                },
+                {
+                    headers: {
+                        'token': token
+                    },
+                    params: {
+                        idUser: id
+                    }
+                },
+            )
+        } catch (error) {
+            console.log('Error', error.message);
+        }
     }
 }
 

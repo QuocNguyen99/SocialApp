@@ -19,17 +19,24 @@ const listItem = [
         }
     },
     {
+        iconName: require('../../../assets/icon/padlock.png'),
+        title: 'Change Password',
+        onPress: (navigation) => {
+            navigation.navigate('ProfileEditPassword')
+        }
+    },
+    {
         iconName: require('../../../assets/icon/darkmode.png'),
         title: 'Change Dark Theme',
         onPress: () => {
-            alert('1')
+            alert('Change Theme')
         }
     },
     {
         iconName: require('../../../assets/icon/global.png'),
         title: 'Change Language',
         onPress: () => {
-            alert('1')
+            alert('Change Language')
         }
     },
     {

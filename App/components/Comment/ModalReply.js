@@ -10,7 +10,7 @@ import authStorage from '../../auth/storage';
 
 const { height } = Dimensions.get('screen');
 
-function ModalReply({ item, closeModal, idUser }) {
+function ModalReply({ item, closeModalReply, closeModal, idUser }) {
     const [text, setText] = useState('');
     const [heightInput, setHeightInput] = useState(60);
     const [listReply, setListReply] = useState([]);
@@ -62,20 +62,20 @@ function ModalReply({ item, closeModal, idUser }) {
                 <TouchableHighlight
                     style={styles.icon}
                     underlayColor='gray'
-                    onPress={() => closeModal()}>
+                    onPress={() => closeModalReply()}>
                     {/* <Icon name='arrow-left' color='black' size={20} /> */}
                     <Image source={require('../../../assets/icon/left-arrow.png')} />
                 </TouchableHighlight>
                 <Title title='Reply' />
             </View>
             <View style={styles.bodyContainer}>
-                <ItemCommentReply item={item} isReply={true} />
+                <ItemCommentReply item={item} isReply={true} closeModal={closeModal} />
                 <View style={styles.subComment}>
                     <FlatList
                         data={listReply}
                         keyExtractor={(item) => item._id.toString()}
                         renderItem={({ item }) => (
-                            <ItemCommentReply item={item} />
+                            <ItemCommentReply item={item} closeModal={closeModal} />
                         )}
                     />
                 </View>

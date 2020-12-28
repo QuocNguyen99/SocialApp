@@ -4,6 +4,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { BottomSheet, ListItem } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 import Avata from './Avata'
 import Button from './Button';
@@ -16,6 +17,7 @@ import ModalPost from '../Post/ModalPost';
 import ModalComment from '../Comment/ModalComment'
 import authStorage from '../../auth/storage'
 import commentApi from '../../api/commentApi';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
@@ -28,6 +30,7 @@ function ItemPost({ item, idUser }) {
     const [countCmt, setCountCmt] = useState('');
     const { displayName, image: imageAuthor } = author;
     createAt = moment(createAt).startOf('minutes').fromNow();
+    const navigation = useNavigation();
 
     useEffect(() => {
         let mount = true
@@ -71,12 +74,6 @@ function ItemPost({ item, idUser }) {
                 }
             })
         }
-        /**
-         * Disconnect when unmuont component
-         */
-        // await socket.on('disconnect', (socket) => {
-        //     console.log('Disconnect Socket!');
-        // });
     }
 
     //gửi len socket lượt like hiện tại
@@ -128,6 +125,10 @@ function ItemPost({ item, idUser }) {
         }
     }
 
+    const goToDetailsScreen = (id) => {
+        navigation.navigate('ProfileDetail', { idUser: id })
+    }
+
     const list = [
         {
             title: 'Edit Post',
@@ -157,9 +158,17 @@ function ItemPost({ item, idUser }) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Avata image={imageAuthor} />
+                <TouchableOpacity
+                    onPress={() => goToDetailsScreen(item.author._id)}
+                >
+                    <Avata image={imageAuthor} />
+                </TouchableOpacity>
                 <View style={styles.subContainer}>
-                    <Text style={styles.name}>{displayName}</Text>
+                    <TouchableOpacity
+                        onPress={() => goToDetailsScreen(item.author._id)}
+                    >
+                        <Text style={styles.name}>{displayName}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.time}>{createAt}</Text>
                 </View>
                 <View style={{

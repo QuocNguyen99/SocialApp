@@ -17,7 +17,7 @@ const ENDPOINT = {
     SEARCH_POST_USER: '/posts/search/:content',
     CHANGE_INFO_USER: '/user/:id',
     CHANGE_AVATA_USER: '/user/updateAvata/:id',
-    CHANGE_IMAGE_COVER_USER: '/user/updateImageCover/:id'
-
+    CHANGE_IMAGE_COVER_USER: '/user/updateImageCover/:id',
+    CHANGE_PASSWORD_USER: '/user/updatepassword/:id'
 }
 export default ENDPOINT;
