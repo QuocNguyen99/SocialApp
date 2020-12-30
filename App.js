@@ -11,6 +11,7 @@ import LoginScreen from './App/screen/LoginScreen';
 import RegisterScreen from './App/screen/RegisterScreen';
 import MainStack from './App/screen/Main/MainStack';
 import StartScreen from './App/screen/StartScreen';
+import ChatScreen from './App/screen/ChatScreen';
 import ProfileDetail from './App/components/Profile/ProfileDetail';
 
 const Stack = createStackNavigator()
@@ -25,10 +26,9 @@ const StackNavigator = ({ token }) => (
         <>
           <Stack.Screen name='MainScreen' component={MainStack} />
           <Stack.Screen name='ProfileDetail' component={ProfileDetail} />
-          {/* <Stack.Screen name='HomeScreen' component={HomeScreen} /> */}
           <Stack.Screen name='LoginScreen' component={LoginScreen} />
           <Stack.Screen name='RegisterScreen' component={RegisterScreen} />
-          {/* <Stack.Screen name='RegisterScreen' component={ChangePasswordScreen} /> */}
+          <Stack.Screen name='ChatScreen' component={ChatScreen} />
         </>
       ) :
       (<>

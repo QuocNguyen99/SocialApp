@@ -1,18 +1,20 @@
 import React from 'react'
 import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native';
-import Icon from './Icon'
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get("screen");
 
-export default function Header() {
+export default function Header({ }) {
+    const navigation = useNavigation();
     return (
         <View style={styles.containerSearch}>
             <Text style={styles.title}>DOLPHIN</Text>
             <View style={styles.search}>
                 <TouchableOpacity
-                    onPress={() => alert('Chat')}
+                    style={styles.iconRight}
+                    onPress={() => navigation.navigate('ChatScreen')}
                 >
-                    <Image source={require('../../assets/icon/message-blue.png')} />
+                    <Image source={require('../../assets/icon/message-blue.png')} style={styles.message} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -29,8 +31,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         marginBottom: -5
     },
-    search: {
-
+    message: {
+        width: 30,
+        height: 30
     },
     a: {
         backgroundColor: 'lightgray',
@@ -41,5 +44,12 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: 'dodgerblue',
         fontWeight: 'bold'
+    },
+    iconRight: {
+        flex: 1,
+        alignItems: 'flex-end',
+        width: 20,
+        height: 30,
+        justifyContent: 'center'
     }
 })
