@@ -1,10 +1,9 @@
 import React from 'react'
-import { StyleSheet, TouchableOpacity, Image, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 
-import Title from '../components/Title';
-import ItemListConversation from '../components/Chat/ItemListConversation'
+import Title from '../components/Title'
 
-export default function ChatScreen({ navigation }) {
+export default function DetailsChatScreen({ navigation }) {
     return (
         <View style={styles.container} >
             <View style={styles.headerContainer}>
@@ -14,15 +13,7 @@ export default function ChatScreen({ navigation }) {
                     onPress={() => navigation.goBack()}>
                     <Image source={require('../../assets/left-arrow-white.png')} />
                 </TouchableOpacity>
-                <Title title='Chat' style={styles.title} />
-                <TouchableOpacity
-                    style={styles.iconRight}
-                >
-                    <Image source={require('../../assets/icon/search.png')} style={styles.search} />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.bodyContainer}>
-                <ItemListConversation />
+                <Title title='Detail Chat' style={styles.title} />
             </View>
         </View>
     )
@@ -49,16 +40,4 @@ const styles = StyleSheet.create({
     title: {
         color: 'white', fontFamily: 'Roboto-Bold'
     },
-    iconRight: {
-        flex: 1,
-        alignItems: 'flex-end',
-        width: 20,
-        height: 30,
-        justifyContent: 'center'
-    },
-    search: {
-        width: 25,
-        height: 25,
-        marginRight: 5
-    }
 })

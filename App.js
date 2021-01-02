@@ -13,6 +13,7 @@ import MainStack from './App/screen/Main/MainStack';
 import StartScreen from './App/screen/StartScreen';
 import ChatScreen from './App/screen/ChatScreen';
 import ProfileDetail from './App/components/Profile/ProfileDetail';
+import DetailsChatScreen from './App/screen/DetailsChatScreen';
 
 const Stack = createStackNavigator()
 
@@ -29,6 +30,7 @@ const StackNavigator = ({ token }) => (
           <Stack.Screen name='LoginScreen' component={LoginScreen} />
           <Stack.Screen name='RegisterScreen' component={RegisterScreen} />
           <Stack.Screen name='ChatScreen' component={ChatScreen} />
+          <Stack.Screen name='DetailChatScreen' component={DetailsChatScreen} />
         </>
       ) :
       (<>
