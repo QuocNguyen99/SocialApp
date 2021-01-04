@@ -19,7 +19,6 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
     const [visiable, setVisiable] = useState(false)
     const [imageUrls, setImageUrls] = useState([]);
     const idUser = route.params.idUser;
-    console.log('ID USER', idUser);
     useEffect(() => {
         listPost(idUser);
     }, [])
@@ -69,7 +68,7 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
             <View style={styles.headerContainer}>
                 <TouchableOpacity
                     style={styles.icon}
-                    activeOpacity={0.7}
+                    activeOpacity={0.5}
                     onPress={() => navigation.goBack()}>
                     {/* <Icon name='arrow-left' color='black' size={20} /> */}
                     <Image source={require('../../../assets/left-arrow-white.png')} />

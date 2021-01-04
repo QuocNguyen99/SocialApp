@@ -18,6 +18,10 @@ const ENDPOINT = {
     CHANGE_INFO_USER: '/user/:id',
     CHANGE_AVATA_USER: '/user/updateAvata/:id',
     CHANGE_IMAGE_COVER_USER: '/user/updateImageCover/:id',
-    CHANGE_PASSWORD_USER: '/user/updatepassword/:id'
+    CHANGE_PASSWORD_USER: '/user/updatepassword/:id',
+    GET_LIST_CONVERSATION_BY_USER: '/conversation/',
+    CREATE_CONVERSATION: '/conversation/createConversation',
+    SEND_MESSAGE: '/message/',
+    GET_LIST_MESSAGE: '/message/',
 }
 export default ENDPOINT;

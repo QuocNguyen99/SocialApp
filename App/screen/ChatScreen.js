@@ -1,10 +1,29 @@
-import React from 'react'
-import { StyleSheet, TouchableOpacity, Image, View } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, TouchableOpacity, Image, View, FlatList } from 'react-native';
+import { connect } from 'react-redux';
 
 import Title from '../components/Title';
 import ItemListConversation from '../components/Chat/ItemListConversation'
+import conversationApi from '../api/conversationApi';
 
-export default function ChatScreen({ navigation }) {
+function ChatScreen({ navigation, idUser }) {
+
+    const [listConversation, setListConversation] = useState([]);
+
+    useEffect(() => {
+        getDataListConversation(idUser);
+    }, []);
+
+    const getDataListConversation = async (idUser) => {
+        try {
+            const { error, data, message } = await conversationApi.getListConversation(idUser);
+            if (error) return alert("List Conver" + message);
+            setListConversation([...data]);
+        } catch (error) {
+            console.log('List Conver', error.message);
+        }
+    }
+
     return (
         <View style={styles.container} >
             <View style={styles.headerContainer}>
@@ -22,11 +41,25 @@ export default function ChatScreen({ navigation }) {
                 </TouchableOpacity>
             </View>
             <View style={styles.bodyContainer}>
-                <ItemListConversation />
+                <FlatList
+                    data={listConversation}
+                    keyExtractor={(item) => item._id.toString()}
+                    renderItem={({ item }) => (
+                        <ItemListConversation item={item} idUser={idUser} />
+                    )}
+                />
             </View>
         </View>
     )
 }
+
+function mapStateToProps(state) {
+    return {
+        idUser: state.user.infoUser._id
+    }
+}
+
+export default connect(mapStateToProps)(ChatScreen)
 
 const styles = StyleSheet.create({
     container: {
