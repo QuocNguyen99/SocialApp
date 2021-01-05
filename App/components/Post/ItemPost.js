@@ -79,7 +79,7 @@ function ItemPost({ item, idUser }) {
     //gửi len socket lượt like hiện tại
     const sendCountLikeToSocket = (id) => {
         socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
-        socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
+        // socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
     }
 
     const closeModalEdit = () => {

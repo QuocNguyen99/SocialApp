@@ -17,7 +17,7 @@ export default function ItemListConversation({ item, onPress, idUser }) {
     return (
         <TouchableHighlight
             underlayColor='lightgray'
-            onPress={() => navigation.navigate('DetailChatScreen', { idConversation: item._id })}
+            onPress={() => navigation.navigate('DetailChatScreen', { idConversation: item._id, imageConversation: profileConversationNotGroup[0].image, nameConversation: profileConversationNotGroup[0].displayName })}
         >
             <View style={styles.container}>
                 <Avata image={profileConversationNotGroup[0].image} styleImage={styles.avata} />

@@ -2,19 +2,47 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
+import { connect } from 'react-redux';
 import messageApi from '../api/message';
 import Title from '../components/Title';
-import { connect } from 'react-redux';
+import Avata from '../components/Post/Avata'
+import socket from '../socket/socket';
+import SOCKET_URL from '../socket/constant';
+
 
 function DetailsChatScreen({ navigation, route, infoUser }) {
     const [messages, setMessages] = useState([]);
+    const { idConversation, imageConversation, nameConversation } = route.params
+
     useEffect(() => {
         getListMessage()
     }, []);
 
+    useEffect(() => {
+        connectRoomSocket(idConversation)
+    }, []);
+
+    useEffect(() => {
+        receiveMessageSocket()
+    }, []);
+
+    const sendMessageSocket = (idConversation, message) => {
+        socket.emit(SOCKET_URL.CLIENT_SEND_MESSAGE, { idConversation, message })
+    }
+
+    const connectRoomSocket = (idConversation) => {
+        socket.emit(SOCKET_URL.CLIENT_SEND_ROOM, idConversation)
+    }
+
+    const receiveMessageSocket = () => {
+        socket.on(SOCKET_URL.SERVER_SEND_MESSAGE, message => {
+            alert(message)
+        })
+    }
+
     const getListMessage = async () => {
         try {
-            const { error, data } = await messageApi.getListMessage(route.params.idConversation);
+            const { error, data } = await messageApi.getListMessage(idConversation);
             if (error) return console.log('List mess Err', error);
             const newData = data.map(e => {
                 return {
@@ -36,6 +64,7 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
 
     const onSend = useCallback((messages = []) => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+        sendMessageSocket(idConversation, '123')
     }, [])
 
     return (
@@ -47,7 +76,8 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
                     onPress={() => navigation.goBack()}>
                     <Image source={require('../../assets/left-arrow-white.png')} />
                 </TouchableOpacity>
-                <Title title='Detail Chat' style={styles.title} />
+                <Avata image={imageConversation} styleImage={{ width: 30, height: 30 }} />
+                <Title title={nameConversation} style={styles.title} />
             </View>
             <View style={{ flex: 1, backgroundColor: 'white' }}>
                 <GiftedChat
@@ -90,6 +120,9 @@ const styles = StyleSheet.create({
         padding: 5
     },
     title: {
-        color: 'white', fontFamily: 'Roboto-Bold'
+        marginLeft: 10,
+        fontSize: 14,
+        color: 'white',
+        fontFamily: 'Roboto-Bold'
     },
 })
