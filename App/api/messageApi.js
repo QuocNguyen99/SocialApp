@@ -16,6 +16,24 @@ const messageApi = {
         } catch (error) {
             console.log('LIST MESS', error.message);
         }
+    },
+    createMessage: (idConversation, message, token) => {
+        try {
+            const url = ENDPOINT.SEND_MESSAGE;
+            return axiosClient.post(
+                url,
+                {
+                    idConversation,
+                    message
+                },
+                {
+                    headers: {
+                        token
+                    }
+                })
+        } catch (error) {
+            console.log('CREATE MESSAGE', error.message);
+        }
     }
 }
 

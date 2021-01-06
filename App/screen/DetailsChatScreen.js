@@ -8,13 +8,14 @@ import { connect } from 'react-redux';
 
 function DetailsChatScreen({ navigation, route, infoUser }) {
     const [messages, setMessages] = useState([]);
+    const idConversation = route.params; rsation
     useEffect(() => {
         getListMessage()
     }, []);
 
     const getListMessage = async () => {
         try {
-            const { error, data } = await messageApi.getListMessage(route.params.idConversation);
+            const { error, data } = await messageApi.getListMessage(idConversation);
             if (error) return console.log('List mess Err', error);
             const newData = data.map(e => {
                 return {
@@ -34,7 +35,7 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
         }
     }
 
-    const onSend = useCallback((messages = []) => {
+    const onSend = useCallback((idConversation, messages = []) => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
     }, [])
 
