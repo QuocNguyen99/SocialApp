@@ -62,24 +62,22 @@ function ItemPost({ item, idUser }) {
 
     // kết nối với socket nhận về data là length likes
     const getCountLikeAndCmtFormSocket = (setCountLike, id, mount) => {
-        if (mount == true) {
-            socket.on(SOCKET_URL.SERVER_SEND_COUNT_LIKE, (data) => {
-                if (data.id == id) {
-                    setCountLike(data.count);
-                }
-            });
-            socket.on(SOCKET_URL.SERVER_SEND_COUNT_COMMENT, (data) => {
-                if (data.id == id) {
-                    setCountCmt(data.count);
-                }
-            })
-        }
+        socket.on(SOCKET_URL.SERVER_SEND_COUNT_LIKE, (data) => {
+            if (data.id == id) {
+                mount && setCountLike(data.count);
+            }
+        });
+        socket.on(SOCKET_URL.SERVER_SEND_COUNT_COMMENT, (data) => {
+            if (data.id == id) {
+                mount && setCountCmt(data.count);
+            }
+        })
     }
 
     //gửi len socket lượt like hiện tại
     const sendCountLikeToSocket = (id) => {
         socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
-        socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
+        // socket.emit(SOCKET_URL.CLIENT_SEND_COUNT_LIKE, id);
     }
 
     const closeModalEdit = () => {

@@ -4,7 +4,6 @@ import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import Icon from '../Icon';
 
 export default function Button({ onPress, title, styleContainer, styleTitle, styleTitleContainer, iconName, color }) {
-
     return (
         <TouchableHighlight
             style={[styles.container, styleContainer]}

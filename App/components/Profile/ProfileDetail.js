@@ -63,6 +63,20 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
         setVisiable(true);
     }
 
+    const buttonEdit = (title, navigationName) => (
+        <View style={{
+            marginVertical: 10, alignItems: 'center'
+        }}>
+            < TouchableHighlight
+                style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
+                underlayColor='deepskyblue'
+                onPress={() => navigation.navigate(navigationName)}
+            >
+                <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>{title}</Text>
+            </TouchableHighlight>
+        </View>
+    )
+
     return (
         <View style={styles.container} >
             <View style={styles.headerContainer}>
@@ -141,8 +155,16 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                     {
                         idUser == idUserRedux ?
                             <View style={{
-                                marginVertical: 10, alignItems: 'center'
+                                marginVertical: 10, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
                             }}>
+                                < TouchableHighlight
+                                    style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
+                                    underlayColor='deepskyblue'
+                                    onPress={() => navigation.navigate('AlbumScreen')}
+                                >
+                                    <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>Album</Text>
+                                </TouchableHighlight>
+
                                 < TouchableHighlight
                                     style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
                                     underlayColor='deepskyblue'
@@ -151,7 +173,7 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                                     <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>Edit Profile</Text>
                                 </TouchableHighlight>
                             </View>
-                            : null
+                            : buttonEdit('Album', 'AlbumScreen')
                     }
 
                     {

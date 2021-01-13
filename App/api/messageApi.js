@@ -2,14 +2,15 @@ import axiosClient from "./axiosClient";
 import ENDPOINT from "./constants";
 
 const messageApi = {
-    getListMessage: (idConversation) => {
+    getListMessage: (idConversation, page) => {
         try {
             const url = ENDPOINT.GET_LIST_MESSAGE;
             return axiosClient.get(
                 url,
                 {
                     params: {
-                        idConversation
+                        idConversation,
+                        page
                     }
                 }
             )
