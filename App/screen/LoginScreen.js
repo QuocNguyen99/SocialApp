@@ -37,7 +37,6 @@ function LoginScreen({ navigation, handleSaveInfo, infoUser }) {
             Alert.alert('Error', error.message);
         }
     }
-    console.log('Login', infoUser);
     return (
         <ImageBackground
             source={require('../../assets/bg.png')}

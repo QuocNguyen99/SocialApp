@@ -9,6 +9,8 @@ import Title from '../Title';
 import ItemPost from '../../components/Post/ItemPost'
 import ItemInput from '../Post/ItemInput';
 import userApi from '../../api/userApi';
+import authStorage from '../../auth/storage'
+import conversationApi from '../../api/conversationApi';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -63,19 +65,24 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
         setVisiable(true);
     }
 
-    const buttonEdit = (title, navigationName) => (
-        <View style={{
-            marginVertical: 10, alignItems: 'center'
-        }}>
-            < TouchableHighlight
-                style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
-                underlayColor='deepskyblue'
-                onPress={() => navigation.navigate(navigationName)}
-            >
-                <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>{title}</Text>
-            </TouchableHighlight>
-        </View>
-    )
+    const handleNavigaDetailChat = async (idUserRedux, idUserOther) => {
+        try {
+            const token = await authStorage.getToken();
+            const { error, data, message } = await conversationApi.createConversation(idUserRedux, idUserOther, token);
+            if (error) return console.log("CREATE MESSAGE ERROR", message);
+
+            const infoConversationNotGroup = data.members.filter(e => e._id !== idUserRedux);
+            console.log("Data", data);
+            navigation.navigate('DetailChatScreen',
+                {
+                    idConversation: data._id,
+                    imageConversation: infoConversationNotGroup[0].image,
+                    nameConversation: infoConversationNotGroup[0].displayName
+                })
+        } catch (error) {
+            console.log("CREATE MESSAGE", error.message);
+        }
+    }
 
     return (
         <View style={styles.container} >
@@ -160,7 +167,7 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                                 < TouchableHighlight
                                     style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
                                     underlayColor='deepskyblue'
-                                    onPress={() => navigation.navigate('AlbumScreen')}
+                                    onPress={() => navigation.navigate('AlbumScreen', { idUser: idUser })}
                                 >
                                     <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>Album</Text>
                                 </TouchableHighlight>
@@ -173,7 +180,26 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                                     <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>Edit Profile</Text>
                                 </TouchableHighlight>
                             </View>
-                            : buttonEdit('Album', 'AlbumScreen')
+                            :
+                            <View style={{
+                                marginVertical: 10, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around'
+                            }}>
+                                < TouchableHighlight
+                                    style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
+                                    underlayColor='deepskyblue'
+                                    onPress={() => navigation.navigate('AlbumScreen', { idUser: idUser })}
+                                >
+                                    <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>Album</Text>
+                                </TouchableHighlight>
+
+                                < TouchableHighlight
+                                    style={{ overflow: 'hidden', backgroundColor: 'dodgerblue', borderRadius: 50 }}
+                                    underlayColor='deepskyblue'
+                                    onPress={() => handleNavigaDetailChat(idUserRedux, idUser)}
+                                >
+                                    <Text style={{ color: 'white', fontFamily: 'Roboto-Medium', fontSize: 20, paddingHorizontal: 30, paddingVertical: 8 }}>Chat</Text>
+                                </TouchableHighlight>
+                            </View>
                     }
 
                     {
@@ -184,7 +210,6 @@ function ProfileDetail({ navigation, route, idUserRedux }) {
                             </View>
                             :
                             null
-
                     }
                     {
                         posts.length == 0 ?

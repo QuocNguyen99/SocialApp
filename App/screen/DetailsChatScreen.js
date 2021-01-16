@@ -10,25 +10,26 @@ import socket from '../socket/socket';
 import SOCKET_URL from '../socket/constant';
 
 function DetailsChatScreen({ navigation, route, infoUser }) {
-    const [messages, setMessages] = useState([]);
+    let [messages, setMessages] = useState([]);
     const [page, setPage] = useState(1);
     const [loadMore, setLoadMore] = useState(true);
     const { idConversation, imageConversation, nameConversation } = route.params
     useEffect(() => {
         let unmount = true;
         getListMessage(unmount, page);
+        receiveMessageSocket(unmount, infoUser);
         return () => {
             unmount = false;
         }
     }, [page]);
 
-    useEffect(() => {
-        let unmount = true;
-        receiveMessageSocket(unmount, infoUser);
-        return () => {
-            unmount = false;
-        }
-    }, []);
+    // useEffect(() => {
+    //     let unmount = true;
+    //     receiveMessageSocket(unmount, infoUser);
+    //     return () => {
+    //         unmount = false;
+    //     }
+    // }, []);
 
     useEffect(() => {
         connectRoomSocket(idConversation)
@@ -44,7 +45,7 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
     }
 
     const receiveMessageSocket = (unmount, infoUser) => {
-        socket.on(SOCKET_URL.SERVER_SEND_MESSAGE, (message) => {
+        socket.on(SOCKET_URL.SERVER_SEND_MESSAGE, async (message) => {
             const mess = message.messageSendClient;
             if (mess.sender._id !== infoUser) {
                 const structGiftChatMessage = {
@@ -57,8 +58,9 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
                         avatar: mess.sender.image,
                     },
                 }
-                unmount && setMessages(previousMessages => GiftedChat.append(previousMessages, structGiftChatMessage));
             }
+            await getListMessage(true, page);
+
         })
     }
 
@@ -66,7 +68,7 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
         try {
             const { error, data } = await messageApi.getListMessage(idConversation, page);
             if (error) return console.log('List mess Err', error);
-            const newData = data.map(e => {
+            let newData = data.map(e => {
                 return {
                     _id: e._id,
                     text: e.content,
@@ -79,6 +81,7 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
                 }
             })
             unmount && setMessages([...messages, ...newData])
+
         } catch (error) {
             console.log('List mess cATCH', error.message);
         }
@@ -90,8 +93,9 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
     }, [])
 
     const onLoadEarlier = () => {
-        if (messages.length >= 20)
+        if (messages.length >= 20) {
             return setPage(Number(page) + 1);
+        }
         return;
     }
 

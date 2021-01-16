@@ -39,8 +39,6 @@ function MainStack({ infoUser, handleSaveInfo }) {
     }, [])
 
     const handleDispatchInfo = async (mount) => {
-        // console.log();
-        console.log('Infor', infoUser);
         if (Object.keys(infoUser).length === 0 && mount == true) {
             const user = await authStorage.getUser();
             handleSaveInfo(user);

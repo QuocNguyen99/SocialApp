@@ -1,11 +1,36 @@
-import React from 'react'
-import { StyleSheet, TouchableOpacity, View, Image, Dimensions } from 'react-native';
+import { setIn } from 'formik';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, TouchableOpacity, View, Image, Dimensions, Modal } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
+import userApi from '../api/userApi';
 import Title from '../components/Title';
 
 const { width } = Dimensions.get('screen');
 
-export default function AlbumScreen({ navigation }) {
+export default function AlbumScreen({ navigation, route }) {
+    const [images, setImages] = useState([]);
+    const [visiable, setVisiable] = useState(false)
+    const [index, setIndex] = useState(0)
+    const [page, setPage] = useState(1);
+    useEffect(() => {
+        getImageUser();
+    }, [])
+
+    let imageUrls = [];
+    images.map(e => imageUrls.push({ url: e }))
+
+    const getImageUser = async () => {
+        try {
+            const idUser = route.params.idUser;
+            const { error, data } = await userApi.getImagesUser(idUser);
+            if (error) return console.log('GET LIST IMAGE');
+            setImages([...images, ...data])
+        } catch (error) {
+            console.log('GET IMAGES', error);
+        }
+    }
     return (
         <View style={styles.container} >
             <View style={styles.headerContainer}>
@@ -18,51 +43,36 @@ export default function AlbumScreen({ navigation }) {
                 <Title title='Album' style={styles.title} />
             </View>
 
-            <View style={{ flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Image
-                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/1200px-Android_robot.svg.png' }}
-                    resizeMode='cover'
-                    style={{ width: width / 4, height: width / 4, marginTop: 10, borderColor: 'white', borderWidth: 2 }}
-                />
-                <Image
-                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/1200px-Android_robot.svg.png' }}
-                    resizeMode='cover'
-                    style={{ width: width / 4, height: width / 4, marginTop: 10, borderColor: 'white', borderWidth: 2 }}
+            <FlatList
+                data={images}
+                numColumns={4}
+                keyExtractor={(item) => item.toString()}
+                renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                        onPress={() => {
+                            setIndex(index)
+                            setVisiable(true)
+                        }}
+                    >
+                        <Image
+                            source={{ uri: item }}
+                            resizeMode='cover'
+                            style={{ width: width / 4, height: width / 4, marginTop: 2, borderColor: 'white', borderWidth: 2 }}
+                        />
+                    </TouchableOpacity>
+                )}
+            />
 
-                />
-                <Image
-                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/1200px-Android_robot.svg.png' }}
-                    resizeMode='cover'
-                    style={{ width: width / 4, height: width / 4, marginTop: 10, borderColor: 'white', borderWidth: 2 }}
-
-                />
-                <Image
-                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/1200px-Android_robot.svg.png' }}
-                    resizeMode='cover'
-                    style={{ width: width / 4, height: width / 4, marginTop: 10, borderColor: 'white', borderWidth: 2 }}
-
-                />
-                <Image
-                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/1200px-Android_robot.svg.png' }}
-                    resizeMode='cover'
-                    style={{ width: width / 4, height: width / 4, marginTop: 10, borderColor: 'white', borderWidth: 2 }}
-
-                />
-                <Image
-                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/1200px-Android_robot.svg.png' }}
-                    resizeMode='cover'
-                    style={{ width: width / 4, height: width / 4, marginTop: 10, borderColor: 'white', borderWidth: 2 }}
-
-                />
-
-            </View>
+            <Modal visible={visiable} transparent={true}>
+                <ImageViewer imageUrls={imageUrls} enableSwipeDown={true} onCancel={() => setVisiable(false)} index={index} />
+            </Modal>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
     },
     headerContainer: {
         flexDirection: 'row',

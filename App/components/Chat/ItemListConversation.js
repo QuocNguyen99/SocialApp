@@ -13,7 +13,7 @@ export default function ItemListConversation({ item, onPress, idUser }) {
     const profileConversationNotGroup = item.members.filter(e => !(e._id == idUser));
     const lastMessage = item.lastMessage;
     const timeCreate = moment(lastMessage.createAt).startOf('minutes').fromNow();
-    const userLastMessage = item.lastMessage.sender._id !== idUser ? 'You: ' : ''
+    const userLastMessage = item.lastMessage.sender._id !== idUser ? '' : 'You: '
     return (
         <TouchableHighlight
             underlayColor='lightgray'

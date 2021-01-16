@@ -57,7 +57,6 @@ const postApi = {
     listPostByIdUser: (id) => {
         try {
             const url = ENDPOINT.GET_LIST_POST_BY_ID_USER;
-            console.log(id);
             return axiosClient.get(
                 url,
                 {

@@ -23,5 +23,6 @@ const ENDPOINT = {
     CREATE_CONVERSATION: '/conversation/createConversation',
     SEND_MESSAGE: '/message/',
     GET_LIST_MESSAGE: '/message/',
+    GET_LIST_IMAGES_BY_USERS: '/user/getListImageByUser/',
 }
 export default ENDPOINT;

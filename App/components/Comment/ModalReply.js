@@ -38,7 +38,6 @@ function ModalReply({ item, closeModalReply, closeModal, idUser }) {
     }
     const handleCommentReply = async (idUser, id, idComment, text) => {
         try {
-            console.log('1');
             const token = await authStorage.getToken();
             const comment = {
                 content: text.trim(),

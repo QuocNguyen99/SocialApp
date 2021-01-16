@@ -21,6 +21,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function ItemPost({ item, idUser }) {
     const [visiable, setVisiable] = useState(false)
+    const [index, setIndex] = useState(0)
     const [visiableEdit, setVisiableEdit] = useState(false);
     const [visiableComment, setVisiableComment] = useState(false)
     const [visiableBottomSheet, setVisiableBottomSheet] = useState(false)
@@ -108,7 +109,7 @@ function ItemPost({ item, idUser }) {
     const changeColor = (likes, idUser, mount) => {
         if (mount == true) {
             const result = likes.filter(e => e == idUser);
-            return result.length > 0 ? setColor('dodgerblue') : setColor('black')
+            return mount && result.length > 0 ? setColor('dodgerblue') : setColor('black')
         }
     }
 

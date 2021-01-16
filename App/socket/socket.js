@@ -8,7 +8,7 @@ const connectionConfig = {
     transports: ['websocket'], // you need to explicitly tell it to use websockets
 };
 
-const socket = io('http://192.168.1.2:3000/', connectionConfig);
+const socket = io('http://192.168.1.6:3000/', connectionConfig);
 
 socket.on('connect', () => {
 });

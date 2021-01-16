@@ -139,6 +139,21 @@ const userApi = {
         } catch (error) {
             console.log('Error', error.message);
         }
+    },
+    getImagesUser: (idUser) => {
+        try {
+            const url = ENDPOINT.GET_LIST_IMAGES_BY_USERS;
+            return axiosClient.get(
+                url,
+                {
+                    params: {
+                        idUser,
+                    }
+                }
+            )
+        } catch (error) {
+            console.log("ERROR", error.message);
+        }
     }
 }
 
