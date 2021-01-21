@@ -21,6 +21,7 @@ const ENDPOINT = {
     CHANGE_PASSWORD_USER: '/user/updatepassword/:id',
     GET_LIST_CONVERSATION_BY_USER: '/conversation/',
     CREATE_CONVERSATION: '/conversation/createConversation',
+    DELETE_CONVERSATION: '/conversation/deleteConversation',
     SEND_MESSAGE: '/message/',
     GET_LIST_MESSAGE: '/message/',
     GET_LIST_IMAGES_BY_USERS: '/user/getListImageByUser/',

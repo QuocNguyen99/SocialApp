@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, TouchableOpacity, Image, View, FlatList } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, View, FlatList, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 
 import Title from '../components/Title';
 import ItemListConversation from '../components/Chat/ItemListConversation'
 import conversationApi from '../api/conversationApi';
+import { set } from 'react-native-reanimated';
 
 function ChatScreen({ navigation, idUser }) {
-
+    const [refresh, setRefresh] = useState(false);
     const [listConversation, setListConversation] = useState([]);
 
     useEffect(() => {
@@ -22,6 +23,12 @@ function ChatScreen({ navigation, idUser }) {
         } catch (error) {
             console.log('List Conver', error.message);
         }
+    }
+
+    const handleOnRefresh = () => {
+        setRefresh(true);
+        getDataListConversation(idUser);
+        setRefresh(false);
     }
 
     return (
@@ -42,6 +49,8 @@ function ChatScreen({ navigation, idUser }) {
             </View>
             <View style={styles.bodyContainer}>
                 <FlatList
+                    refreshing={refresh}
+                    onRefresh={() => handleOnRefresh()}
                     data={listConversation}
                     keyExtractor={(item) => item._id.toString()}
                     renderItem={({ item }) => (

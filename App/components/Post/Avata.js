@@ -20,7 +20,7 @@ export default function Avata({ image, styleImage }) {
             }
         </View>
     )
-} 0
+}
 
 const styles = StyleSheet.create({
     image: {

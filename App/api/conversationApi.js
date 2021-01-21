@@ -28,6 +28,21 @@ const conversationApi = {
                 }
             }
         )
+    },
+    deleteConversation: (idConversation, token) => {
+        const url = ENDPOINT.DELETE_CONVERSATION;
+        console.log(idConversation);
+        return axiosClient.delete(
+            url,
+            {
+                headers: {
+                    token: token
+                },
+                params: {
+                    idConversation
+                }
+            }
+        )
     }
 }
 

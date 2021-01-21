@@ -15,6 +15,7 @@ import ChatScreen from './App/screen/ChatScreen';
 import ProfileDetail from './App/components/Profile/ProfileDetail';
 import DetailsChatScreen from './App/screen/DetailsChatScreen';
 import AlbumScreen from './App/screen/AlbumScreen';
+import ProfileConversation from './App/screen/ProfileConversation';
 
 const Stack = createStackNavigator()
 
@@ -33,6 +34,7 @@ const StackNavigator = ({ token }) => (
           <Stack.Screen name='ChatScreen' component={ChatScreen} />
           <Stack.Screen name='DetailChatScreen' component={DetailsChatScreen} />
           <Stack.Screen name='AlbumScreen' component={AlbumScreen} />
+          <Stack.Screen name='ProfileConversation' component={ProfileConversation} />
         </>
       ) :
       (<>

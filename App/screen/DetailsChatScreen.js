@@ -110,7 +110,7 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.profileChat}
-                    onPress={() => alert('1')}>
+                    onPress={() => navigation.navigate('ProfileConversation', { imageConversation, nameConversation })}>
                     <Avata image={imageConversation} styleImage={{ width: 30, height: 30 }} />
                     <Title title={nameConversation} style={styles.title} />
                 </TouchableOpacity>
