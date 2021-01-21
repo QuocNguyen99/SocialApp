@@ -117,7 +117,7 @@ function DetailsChatScreen({ navigation, route, infoUser }) {
 
             </View>
             <View style={{ flex: 1, backgroundColor: 'white' }}>
-                <GiftedChat
+                <GiftedChats
                     scrollToBottom
                     infiniteScroll
                     loadEarlier={true}
